@@ -1,8 +1,5 @@
 import {render} from "react-dom";
-import App from "./App";
-import {BrowserRouter} from "react-router-dom";
-import ThemeProvider from "./theme/ThemeProvider";
-import FormWrapper from "./components/FormWrapper";
+import FormWrapper from "./components/formWrapper/FormWrapper";
 import {Theme} from "./theme/ThemeContext";
 
 
