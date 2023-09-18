@@ -1,0 +1,80 @@
+.SelectWrapper {
+  position: relative;
+  display: flex;
+  //flex-direction: column;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  width: 100%;
+  align-content: flex-start;
+}
+.SelectWrapper::before {
+  content: '';
+  position: absolute;
+  top: 56%;
+  right: 20px;
+  //transform: translateY(-50%);
+  display: block;
+  width: 8px;
+  height: 8px;
+  //background-color: red;
+  z-index: 1;
+  pointer-events: none; //чтобы можно было кликать по стрелке
+  background-color: transparent;
+  border-bottom: 2px solid hsla(0,0%, 39%, .9);
+  border-left: 2px solid hsla(0,0%, 39%, .9);
+  transform: rotate(-45deg);
+}
+
+.label {
+  display: block;
+  width: 100%;
+  font-size: 16px;
+  font-family: "Tahoma", sans-serif;
+  color: #000;
+  margin-bottom: 4px;
+  margin-left: 8px;
+  white-space: pre-wrap;
+  font-weight: 400;
+  line-height: 17px;
+}
+.select::-ms-expand { //убираем стрелку в IE
+  display: none;
+}
+.select {
+  appearance: none; //убираем браузерную стрелку
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  background: #e3eafa;
+  color: rgba(40, 40, 40, 0.9);
+  padding: 10px 50px 10px 10px;
+  position: relative;
+  width: 100% !important;
+  outline: none;
+  cursor: pointer;
+  border-radius: 8px;
+  font-family: "Tahoma", sans-serif;
+  box-shadow: 0px 2px 6px rgba(38, 53, 104, 0.25);
+  border: 0;
+  height: 50px;
+  color: rgba(100, 100, 100, 0.9);
+  font-size: 16px;
+  overflow: hidden;
+  overflow-y: scroll;
+  perspective: 200px;
+  padding-left: 8px;
+  transition: background-color 0.3s;
+  box-sizing: border-box;
+}
+.select:focus {
+  border: 2px solid black;
+  background: #fff;
+}
+.option {
+  border: 2px solid #5a5a5a;
+  border-top: 0;
+  box-shadow: 0 0 22px rgba(0,0,0, .5);
+  max-height: 220px;
+  transform: translateY(0);
+  transition: max-height .5s;
+  z-index: 9999;
+}
