@@ -1,4 +1,4 @@
-import React, {forwardRef, InputHTMLAttributes, memo, useEffect, useRef, useState} from 'react';
+import React, {FC, forwardRef, InputHTMLAttributes, memo, useEffect, useRef, useState} from 'react';
 import cls from './MySelect.module.scss'
 import {FieldErrors, UseFormRegister, UseFormSetValue} from "react-hook-form";
 import {IFormValues} from "../../components/formWrapper/FormWrapper";
@@ -21,13 +21,14 @@ interface InputProps extends HTMLInputProps {
 type Eltype = {
     value:string
     title: string
+    getCurrentItem: (title: string) => void
 }
-const CurrentItem = (el:Eltype, getCurrentItem: (title: string)=>void) => {
+const CurrentItem:FC<Eltype> = ({value, title, getCurrentItem }) => {
     return (
         <div style={{backgroundColor:'#e3eafa', borderRight: '1px solid #5a5a5a', borderTop: '1px solid #5a5a5a' }}>
-        <li  style={{borderRight: 'none'}} className={cls.DropDownItem} onClick={()=>getCurrentItem(el.title)}>
+        <li  style={{borderRight: 'none'}} className={cls.DropDownItem} onClick={()=>getCurrentItem(title)}>
             <div  style={{display: 'flex', justifyContent: 'space-between'}}>
-                <span >{el.title}</span>
+                <span >{title}</span>
                 <Accept size={20} color={'greenColor'}/>
             </div>
         </li>
@@ -59,12 +60,13 @@ export const MySelect = memo(forwardRef<HTMLInputElement, InputProps>((props: In
     const onClose = ()=>{
         setShowList(false)
     }
+
     const getCurrentItem = (title: string) =>{
         setItem(title)
         setCurrentItem(title)
-        // changeItem(title)
         setShowList(false)
     }
+
     const handleClick = (e:Event) =>{
         if (!dropdownRef.current) return
         if (!dropdownRef.current.contains(e.target)) {
@@ -90,7 +92,7 @@ export const MySelect = memo(forwardRef<HTMLInputElement, InputProps>((props: In
                     {
                         option.map(el => (
                             el.title !== currentItem ? <li key={el.value} className={cls.DropDownItem} onClick={()=>getCurrentItem(el.title)}>{el.title}</li>:
-                                <CurrentItem key={el.value} value={el.value} title={el.title}/>
+                                <CurrentItem  getCurrentItem={getCurrentItem} {...el} />
                         ))
                     }
                 </ul>}
