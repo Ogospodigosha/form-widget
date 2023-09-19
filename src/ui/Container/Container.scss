@@ -1,9 +1,6 @@
-@media screen and (min-width: 768px) {
-  .wrapper-layout {
-    padding: 24px;
-  }
-}
-#anketa-info {
+
+
+.wrapper-layout {
   grid-column-gap: 30px;
   grid-row-gap: 20px;
   background: #fff;
@@ -16,4 +13,23 @@
   margin-bottom: 20px;
   overflow: visible;
   box-sizing: border-box;
+  padding: 16px;
+  @media screen and (min-width: 768px) {
+    & {
+      padding: 24px;
+    }
+  }
+  @media screen and (max-width: 767px) {
+    & {
+      grid-template-columns: 100%;
+
+    }
+  }
+  @media screen and  (min-width: 768px) and (max-width: 1040px) {
+    & {
+      grid-template-columns: 1fr 1fr;
+
+    }
+  }
 }
+

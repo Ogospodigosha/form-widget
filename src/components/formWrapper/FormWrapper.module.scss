@@ -1,0 +1,60 @@
+.BtnNext {
+  margin-top: 32px;
+  padding: 0 24px;
+  @media screen and (max-width: 767px) and (min-width: 300px) {
+    & {
+      padding: 0;
+    }
+  }
+}
+.BtnNext button {
+  border: 0;
+  border-radius: 5px;
+  cursor: pointer;
+  display: block;
+  font-size: 14px;
+  font-weight: 700;
+  overflow: hidden;
+  position: relative;
+  text-align: center;
+  transition: box-shadow .5s, border .5s !important;
+
+  /////
+  background: #56c7f5;
+  color: #fff;
+  padding: 16px 58px;
+
+  &:hover {
+    transform: scaleY(1.05);
+    box-shadow: 6px 6px 4px rgba(86, 199, 245, .5);
+    -webkit-box-shadow: 6px 6px 4px rgba(86, 199, 245, .5);
+  }
+
+  @media screen and (min-width: 768px) {
+    & {
+      font-size: 18px;
+    }
+  }
+  @media screen and (min-width: 1040px) {
+    & {
+      font-size: 22px;
+    }
+  }
+  @media screen and (max-width: 767px) and (min-width: 300px) {
+    & {
+      width: 100%;
+      padding: 15px 0;
+    }
+  }
+}
+.FormTitle {
+  font-size: 17px;
+  line-height: 17px;
+  font-weight: 550;
+  font-family: HelveticaNeueCyr, serif;
+  @media screen and (min-width: 767px) {
+    & {
+      display: none;
+    }
+  }
+}

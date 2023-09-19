@@ -11,6 +11,7 @@ import useCurrentItemStore from "../../store/currentItemStore";
 import {getValueForCreditTarget} from "../../utils/getValueForCreditTarget";
 import {getCurrentLabel} from "../../utils/getCurrentLabel";
 import {getValueForGender} from "../../utils/getValueForGender";
+import cls from './FormWrapper.module.scss'
 
 
 type PropsType = {
@@ -52,7 +53,8 @@ const FormWrapper: FC<PropsType> = ({currentTheme}) => {
             <ThemeProvider currentTheme={currentTheme}>
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <div style={{maxWidth: '1140px', margin: '0 auto'}}>
-                        <Container cls={'wrapper-layout'} id={'anketa-info'}>
+                        <Container cls={'wrapper-layout'} >
+                            <div className={cls.FormTitle}>Заявка</div>
                                <MySelect placeholder={'Например: 700 000'}
                                       name={'credit_target'}
                                       setValue={setValue}
@@ -73,7 +75,8 @@ const FormWrapper: FC<PropsType> = ({currentTheme}) => {
                                     status={errors.credit_sum === undefined && touchedFields.credit_sum   ? true : undefined}
                             />
                         </Container>
-                        <Container cls={'wrapper-layout'} id={'anketa-info'}>
+                        <Container cls={'wrapper-layout'}>
+                            <div className={cls.FormTitle}>Контактная информация</div>
                             <Input  {...register("surname",{required: true, pattern: /^[А-Яа-яЁё\s\-]+$/ } )}
                                     placeholder={'Например: Иванов'}
                                     label={'Ваша фамилия'}
@@ -112,8 +115,12 @@ const FormWrapper: FC<PropsType> = ({currentTheme}) => {
                                       option={Array({value: 'FEMALE', title: 'Женский'},{value :'MALE', title: 'Мужской'} )}
                             />
                         </Container>
+                        <div className={cls.BtnNext}>
+                            <button  type={'submit'} onClick={clickHandler}>Продолжить</button>
+                        </div>
                     </div>
-                    <button type={'submit'} onClick={clickHandler}>Send</button>
+
+
                 </form>
             </ThemeProvider>
         </BrowserRouter>

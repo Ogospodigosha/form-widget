@@ -3,12 +3,12 @@ import './Container.scss'
 
 interface Container {
     cls: string
-    id: string
+
 }
 
-export const Container: FC<Container> = ({cls, id, children}) => {
+export const Container: FC<Container> = ({cls,  children}) => {
     return (
-        <div className={cls} id={id}>
+        <div className={cls}>
             {children}
         </div>
     );
