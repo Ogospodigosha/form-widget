@@ -3,19 +3,27 @@ import { immer } from 'zustand/middleware/immer'
 
 
 export interface useCurrentItemStoreStateType {
-    itemForSelect: string
-    setItem: (itemForSelect: string) => void
+    creditTargetSelectItem: string
+    genderSelectItem: string
+    setGenderSelectItem: (genderSelectItem: string)=> void
+    setCreditTargetSelectItem: (creditTargetSelectItem: string) => void
 }
 
 
 
 const useCurrentItemStore = create(immer<useCurrentItemStoreStateType>((set) => ({
-    itemForSelect: '',
-    setItem: (itemForSelect: string) =>{
+    creditTargetSelectItem: '',
+    genderSelectItem: '',
+    setCreditTargetSelectItem: (creditTargetSelectItem: string) =>{
         set(state => {
-            state.itemForSelect = itemForSelect
+            state.creditTargetSelectItem = creditTargetSelectItem
         })
-    }
+    },
+    setGenderSelectItem: (genderSelectItem: string) =>{
+        set(state => {
+            state.genderSelectItem = genderSelectItem
+        })
+    },
 
 })))
 export default useCurrentItemStore

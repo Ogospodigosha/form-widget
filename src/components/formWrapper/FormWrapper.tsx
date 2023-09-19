@@ -8,6 +8,9 @@ import {Container} from "../../ui/Container/Container";
 
 import {MySelect} from "../../ui/MySelect/MySelect";
 import useCurrentItemStore from "../../store/currentItemStore";
+import {getValueForCreditTarget} from "../../utils/getValueForCreditTarget";
+import {getCurrentLabel} from "../../utils/getCurrentLabel";
+import {getValueForGender} from "../../utils/getValueForGender";
 
 
 type PropsType = {
@@ -16,35 +19,32 @@ type PropsType = {
 
 export interface IFormValues {
     credit_sum: string
-    test: string
     credit_target: string
+    surname: string
+    name: string
+    patronymic: string
+    gender: string
 }
-const getValueForCreditTarget =  (title: string) =>{
-    switch (title) {
-        case  'Кредитная карта':
-            return 'credit_card'
-        case  'Кредит наличными':
-            return 'credit_cash'
-        case  'Карта рассрочки':
-            return 'installment_card'
-        default:
-            return 'mfo'
-    }
-}
+
 const FormWrapper: FC<PropsType> = ({currentTheme}) => {
-    const itemForSelect = useCurrentItemStore(store => store.itemForSelect)
+    const creditTargetSelectItem = useCurrentItemStore(store => store.creditTargetSelectItem)
+    const genderSelectItem = useCurrentItemStore(store => store.genderSelectItem)
     const {handleSubmit, register, formState:{errors, touchedFields},  setValue } = useForm<IFormValues>({
         mode: "onBlur",
-        defaultValues: {credit_sum: '', credit_target: ''}
+        defaultValues: {credit_sum: '', credit_target: ''},
+        reValidateMode:  "onBlur"
     })
+    console.log(errors)
     const onSubmit: SubmitHandler<IFormValues> = (data) => {
-        const newData = {...data, credit_target: {title: data.credit_target, value: getValueForCreditTarget(data.credit_target)}}
+        const newData = {...data, gender: {title: data.gender, value: getValueForGender(data.gender)}  ,credit_target: {title: data.credit_target, value: getValueForCreditTarget(data.credit_target)}}
             console.log(newData)
-        // console.log(data)
+
     }
 
     const clickHandler = () =>{
-        setValue('credit_target', itemForSelect || 'Кредитная карта', {shouldValidate: false,
+        setValue('credit_target', creditTargetSelectItem || 'Кредитная карта', {shouldValidate: false,
+            shouldDirty: false, shouldTouch:false})
+        setValue('gender', genderSelectItem || 'Мужской', {shouldValidate: false,
             shouldDirty: false, shouldTouch:false})
     }
     return (
@@ -53,7 +53,6 @@ const FormWrapper: FC<PropsType> = ({currentTheme}) => {
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <div style={{maxWidth: '1140px', margin: '0 auto'}}>
                         <Container cls={'wrapper-layout'} id={'anketa-info'}>
-                           <span>
                                <MySelect placeholder={'Например: 700 000'}
                                       name={'credit_target'}
                                       setValue={setValue}
@@ -64,24 +63,53 @@ const FormWrapper: FC<PropsType> = ({currentTheme}) => {
                                       {...register("credit_target")}
                                    option={Array({value: 'credit_card', title: 'Кредитная карта'},{value :'credit_cash', title: 'Кредит наличными'}, {value: 'installment_card', title: 'Карта рассрочки'},{value:'mfo', title:'Кредит до 100 000 под 0%'} )}
                             />
-                           </span>
-                            <Input  {...register("test", {required: true, min:100, max:150  })}
-                                    placeholder={'Например: 700 000'}
-                                    label={'Сумма кредита, руб.'}
-                                    register={register}
-                                    errors={errors}
-                                    type={'number'}
-                                    textError={'Укажите сумму более 10000 руб.'}
-                                    status={errors.test === undefined && touchedFields.test   ? true : undefined}
-                            />
                             <Input  {...register("credit_sum", {required: true, min:10000, max:700000  })}
                                     placeholder={'Например: 700 000'}
-                                    label={'Сумма кредита, руб.'}
+                                    label={getCurrentLabel(creditTargetSelectItem)}
                                     register={register}
                                     errors={errors}
                                     type={'number'}
                                     textError={'Укажите сумму более 10000 руб.'}
                                     status={errors.credit_sum === undefined && touchedFields.credit_sum   ? true : undefined}
+                            />
+                        </Container>
+                        <Container cls={'wrapper-layout'} id={'anketa-info'}>
+                            <Input  {...register("surname",{required: true, pattern: /^[А-Яа-яЁё\s\-]+$/ } )}
+                                    placeholder={'Например: Иванов'}
+                                    label={'Ваша фамилия'}
+                                    register={register}
+                                    errors={errors}
+                                    type={'text'}
+                                    textError={'Укажите вашу фамилию. Допускаются: кириллица, пробел, дефис, тире'}
+                                    status={errors.surname === undefined && touchedFields.surname   ? true : undefined}
+                            />
+                            <Input  {...register("name",{required: true, pattern: /^[А-Яа-яЁё\s\-]+$/ } )}
+                                    placeholder={'Например: Иван'}
+                                    label={'Ваше имя'}
+                                    register={register}
+                                    errors={errors}
+                                    type={'text'}
+                                    textError={'Укажите ваше имя. Допускаются: кириллица, пробел, дефис, тире'}
+                                    status={errors.name === undefined && touchedFields.name   ? true : undefined}
+                            />
+                            <Input  {...register("patronymic",{required: true, pattern: /^[А-Яа-яЁё\s\-]+$/ } )}
+                                    placeholder={'Например: Иванович'}
+                                    label={'Ваше имя'}
+                                    register={register}
+                                    errors={errors}
+                                    type={'text'}
+                                    textError={'Укажите ваше отчество. Допускаются: кириллица, пробел, дефис, тире'}
+                                    status={errors.patronymic === undefined && touchedFields.patronymic   ? true : undefined}
+                            />
+                            <MySelect placeholder={'Укажите ваш пол'}
+                                      name={'gender'}
+                                      setValue={setValue}
+                                      label={'Пол'}
+                                      register={register}
+                                      errors={errors}
+                                      type={'number'}
+                                      {...register("gender")}
+                                      option={Array({value: 'FEMALE', title: 'Женский'},{value :'MALE', title: 'Мужской'} )}
                             />
                         </Container>
                     </div>

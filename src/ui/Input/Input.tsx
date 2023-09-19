@@ -1,4 +1,4 @@
-import React, { forwardRef, InputHTMLAttributes, memo} from 'react';
+import React, {ChangeEvent, forwardRef, InputHTMLAttributes, memo, useState} from 'react';
 import cls from './Input.module.scss'
 import {classNames} from "../../lib/classNames/classNames";
 import {FieldErrors, UseFormRegister} from "react-hook-form";
@@ -23,7 +23,7 @@ interface InputProps extends HTMLInputProps {
 
 
 export const Input =  memo(forwardRef<HTMLInputElement, InputProps>((props: InputProps, ref) => {
-
+    const [value, setValue] = useState('')
     const {
         className,
         type = 'text',
@@ -36,6 +36,17 @@ export const Input =  memo(forwardRef<HTMLInputElement, InputProps>((props: Inpu
         status,
         ...otherProps
     } = props
+    const allowOnlyRussianLetters=(value: string)=>{
+       setValue(value.replace(/^[a-zA-Z0-9]+$/, ''))
+    }
+    const changeHandler = (e: ChangeEvent<HTMLInputElement>) =>{
+        if (type === 'text'){
+            allowOnlyRussianLetters(e.currentTarget.value)
+        } else {
+            setValue(e.currentTarget.value)
+        }
+
+    }
     return (
         <div className={classNames(cls.InputWrapper, {}, [className])}>
             <label className={classNames(cls.label, {}, [className])}>{label}
@@ -49,6 +60,8 @@ export const Input =  memo(forwardRef<HTMLInputElement, InputProps>((props: Inpu
                    {...register( name )}
                    {...otherProps}
                    onClick={e => e.currentTarget.focus()}
+                   value={value}
+                   onChange={changeHandler}
             />
                 <RenderIcon status={status} field={'text'}/>
                 {errors?.[name] && <div style={{color: 'red', padding: '8px', marginTop:'5px', fontSize:'12px', fontWeight:'700', fontFamily: 'HelveticaNeueCyr,sans-serif,normal'}}>{textError}</div>}

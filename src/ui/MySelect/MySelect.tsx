@@ -5,6 +5,7 @@ import {IFormValues} from "../../components/formWrapper/FormWrapper";
 import {classNames} from "../../lib/classNames/classNames";
 import useCurrentItemStore from "../../store/currentItemStore";
 import {Accept} from "../Accept/Accept";
+import {log} from "util";
 
 type HTMLInputProps =
     Omit<InputHTMLAttributes<HTMLInputElement>, 'value' | 'onChange'>
@@ -37,7 +38,9 @@ const CurrentItem:FC<Eltype> = ({value, title, getCurrentItem }) => {
 }
 
 export const MySelect = memo(forwardRef<HTMLInputElement, InputProps>((props: InputProps, ref) => {
-    const setItem = useCurrentItemStore(store => store.setItem)
+    const setCreditTargetSelectItem = useCurrentItemStore(store => store.setCreditTargetSelectItem)
+    const setGenderSelectItem = useCurrentItemStore(store => store.setGenderSelectItem)
+
     const {
         className,
         type = 'text',
@@ -62,9 +65,16 @@ export const MySelect = memo(forwardRef<HTMLInputElement, InputProps>((props: In
     }
 
     const getCurrentItem = (title: string) =>{
-        setItem(title)
-        setCurrentItem(title)
-        setShowList(false)
+        if (name === "credit_target") {
+            setCreditTargetSelectItem(title)
+            setCurrentItem(title)
+            setShowList(false)
+        } else if (name === 'gender') {
+            setGenderSelectItem(title)
+            setCurrentItem(title)
+            setShowList(false)
+        }
+
     }
 
     const handleClick = (e:Event) =>{
@@ -86,13 +96,13 @@ export const MySelect = memo(forwardRef<HTMLInputElement, InputProps>((props: In
                 <span style={{color: 'red'}}>{' *'}</span>
             </label>
             <div style={{width: '100%', position: 'relative'}}>
-                <button className={cls.MySelect} onClick={(event) => clickHandler(event)}>{currentItem || 'Кредитная карта' }</button>
+                <button className={cls.MySelect} onClick={(event) => clickHandler(event)}>{name === 'credit_target'? currentItem || 'Кредитная карта': name === 'gender' ? currentItem || 'Мужской':'' }</button>
                 {showList && <ul className={cls.DropDownList}>
                     <div className={cls.text}>Выберете вариант из списка, нажав на него</div>
                     {
                         option.map(el => (
                             el.title !== currentItem ? <li key={el.value} className={cls.DropDownItem} onClick={()=>getCurrentItem(el.title)}>{el.title}</li>:
-                                <CurrentItem  getCurrentItem={getCurrentItem} {...el} />
+                                <CurrentItem key={el.value}  getCurrentItem={getCurrentItem} {...el} />
                         ))
                     }
                 </ul>}
