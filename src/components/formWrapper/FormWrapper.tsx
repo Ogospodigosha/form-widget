@@ -1,4 +1,4 @@
-import React, {FC, useState} from 'react';
+import React, {FC} from 'react';
 import {Theme} from "../../theme/ThemeContext";
 import ThemeProvider from "../../theme/ThemeProvider";
 import {BrowserRouter} from "react-router-dom";
@@ -35,7 +35,6 @@ const FormWrapper: FC<PropsType> = ({currentTheme}) => {
         defaultValues: {credit_sum: '', credit_target: ''},
         reValidateMode:  "onBlur"
     })
-    console.log(errors)
     const onSubmit: SubmitHandler<IFormValues> = (data) => {
         const newData = {...data, gender: {title: data.gender, value: getValueForGender(data.gender)}  ,credit_target: {title: data.credit_target, value: getValueForCreditTarget(data.credit_target)}}
             console.log(newData)

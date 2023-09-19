@@ -5,7 +5,7 @@ import {IFormValues} from "../../components/formWrapper/FormWrapper";
 import {classNames} from "../../lib/classNames/classNames";
 import useCurrentItemStore from "../../store/currentItemStore";
 import {Accept} from "../Accept/Accept";
-import {log} from "util";
+import {useOutsideClick} from "../../customHooks/useOutsideClick";
 
 type HTMLInputProps =
     Omit<InputHTMLAttributes<HTMLInputElement>, 'value' | 'onChange'>
@@ -26,9 +26,9 @@ type Eltype = {
 }
 const CurrentItem:FC<Eltype> = ({value, title, getCurrentItem }) => {
     return (
-        <div style={{backgroundColor:'#e3eafa', borderRight: '1px solid #5a5a5a', borderTop: '1px solid #5a5a5a' }}>
+        <div className={cls.activeItem}>
         <li  style={{borderRight: 'none'}} className={cls.DropDownItem} onClick={()=>getCurrentItem(title)}>
-            <div  style={{display: 'flex', justifyContent: 'space-between'}}>
+            <div className={cls.activeItemFlex}>
                 <span >{title}</span>
                 <Accept size={20} color={'greenColor'}/>
             </div>
@@ -38,9 +38,6 @@ const CurrentItem:FC<Eltype> = ({value, title, getCurrentItem }) => {
 }
 
 export const MySelect = memo(forwardRef<HTMLInputElement, InputProps>((props: InputProps, ref) => {
-    const setCreditTargetSelectItem = useCurrentItemStore(store => store.setCreditTargetSelectItem)
-    const setGenderSelectItem = useCurrentItemStore(store => store.setGenderSelectItem)
-
     const {
         className,
         type = 'text',
@@ -53,8 +50,11 @@ export const MySelect = memo(forwardRef<HTMLInputElement, InputProps>((props: In
         setValue,
         ...otherProps
     } = props
+    const setCreditTargetSelectItem = useCurrentItemStore(store => store.setCreditTargetSelectItem)
+    const setGenderSelectItem = useCurrentItemStore(store => store.setGenderSelectItem)
     const [showList, setShowList] = useState(false)
     const [currentItem, setCurrentItem] = useState('')
+    const currentName = name === 'credit_target'? currentItem || 'Кредитная карта': name === 'gender' ? currentItem || 'Мужской':''
     const dropdownRef = useRef(null)
     const clickHandler = (event: any ) => {
         event.preventDefault()
@@ -74,29 +74,15 @@ export const MySelect = memo(forwardRef<HTMLInputElement, InputProps>((props: In
             setCurrentItem(title)
             setShowList(false)
         }
-
     }
-
-    const handleClick = (e:Event) =>{
-        if (!dropdownRef.current) return
-        if (!dropdownRef.current.contains(e.target)) {
-            onClose()
-        }
-    }
-    useEffect(()=>{
-        if (!showList) return
-        document.addEventListener('click', handleClick)
-        return ()=>{
-            document.removeEventListener('click', handleClick)
-        }
-    },[showList, onClose])
+    useOutsideClick(dropdownRef, onClose, showList )
     return (
         <div ref={dropdownRef} className={cls.DropDownBtn}>
             <label className={classNames(cls.label, {}, [])}>{label}
                 <span style={{color: 'red'}}>{' *'}</span>
             </label>
-            <div style={{width: '100%', position: 'relative'}}>
-                <button className={cls.MySelect} onClick={(event) => clickHandler(event)}>{name === 'credit_target'? currentItem || 'Кредитная карта': name === 'gender' ? currentItem || 'Мужской':'' }</button>
+            <div className={cls.divSelect}>
+                <button className={cls.MySelect} onClick={(event) => clickHandler(event)}>{currentName}</button>
                 {showList && <ul className={cls.DropDownList}>
                     <div className={cls.text}>Выберете вариант из списка, нажав на него</div>
                     {

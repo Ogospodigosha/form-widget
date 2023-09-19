@@ -111,3 +111,16 @@
   font-size: 11px !important;
   border-right: 1px solid #5a5a5a;
 }
+.activeItem {
+  background-color: #e3eafa;
+  border-right: 1px solid #5a5a5a;
+  border-top: 1px solid #5a5a5a;
+  .activeItemFlex {
+    display: flex;
+    justify-content: space-between;
+  }
+}
+.divSelect {
+  width: 100%;
+  position: relative;
+}
