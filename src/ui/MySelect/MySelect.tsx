@@ -1,4 +1,4 @@
-import React, {FC, forwardRef, InputHTMLAttributes, memo, useEffect, useRef, useState} from 'react';
+import React, {FC, forwardRef, InputHTMLAttributes, memo, useRef, useState} from 'react';
 import cls from './MySelect.module.scss'
 import {FieldErrors, UseFormRegister, UseFormSetValue} from "react-hook-form";
 import {IFormValues} from "../../components/formWrapper/FormWrapper";
