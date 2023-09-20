@@ -46,6 +46,7 @@ export const CreditParameters = () => {
         }
 
         await FormApi.sendCreditParams(newData)
+        await FormApi.getApplication()
         console.log(newData)
 
     }
