@@ -1,11 +1,11 @@
 import React, {FC, forwardRef, InputHTMLAttributes, memo, useRef, useState} from 'react';
 import cls from './MySelect.module.scss'
-import {FieldErrors, UseFormRegister, UseFormSetValue} from "react-hook-form";
+import {FieldErrors, UseFormRegister} from "react-hook-form";
 import {IFormValues} from "../../components/formWrapper/FormWrapper";
 import {classNames} from "../../lib/classNames/classNames";
-import useCurrentItemStore from "../../store/currentItemStore";
 import {Accept} from "../Accept/Accept";
 import {useOutsideClick} from "../../customHooks/useOutsideClick";
+import {useLocalStorageState} from "../../customHooks/useLocalStorage";
 
 type HTMLInputProps =
     Omit<InputHTMLAttributes<HTMLInputElement>, 'value' | 'onChange'>
@@ -17,7 +17,7 @@ interface InputProps extends HTMLInputProps {
     register: UseFormRegister<IFormValues>
     errors: FieldErrors<IFormValues>
     option: Array<{ value: string, title: string }>
-    setValue: UseFormSetValue<IFormValues>
+    titleForLabel?: (title: string)=>void
 }
 type Eltype = {
     value:string
@@ -47,15 +47,16 @@ export const MySelect = memo(forwardRef<HTMLInputElement, InputProps>((props: In
         name,
         errors,
         option,
-        setValue,
+        titleForLabel,
         ...otherProps
     } = props
-    const setCreditTargetSelectItem = useCurrentItemStore(store => store.setCreditTargetSelectItem)
-    const setGenderSelectItem = useCurrentItemStore(store => store.setGenderSelectItem)
+    // const setCreditTargetSelectItem = useCurrentItemStore(store => store.setCreditTargetSelectItem)
+    // const setGenderSelectItem = useCurrentItemStore(store => store.setGenderSelectItem)
     const [showList, setShowList] = useState(false)
-    const [currentItem, setCurrentItem] = useState('')
-    const currentName = name === 'credit_target'? currentItem || 'Кредитная карта': name === 'gender' ? currentItem || 'Мужской':''
+    const [value, setValue] = useLocalStorageState(`${name}`, '')
+    const currentName = name === 'credit_target'? value || 'Кредитная карта': name === 'gender' ? value || 'Мужской':''
     const dropdownRef = useRef(null)
+
     const clickHandler = (event: any ) => {
         event.preventDefault()
         setShowList(prev => !prev)
@@ -63,18 +64,19 @@ export const MySelect = memo(forwardRef<HTMLInputElement, InputProps>((props: In
     const onClose = ()=>{
         setShowList(false)
     }
-
     const getCurrentItem = (title: string) =>{
         if (name === "credit_target") {
-            setCreditTargetSelectItem(title)
-            setCurrentItem(title)
+            setValue(title)
+            titleForLabel(title)
+            // setCreditTargetSelectItem(title)
             setShowList(false)
         } else if (name === 'gender') {
-            setGenderSelectItem(title)
-            setCurrentItem(title)
+            // setGenderSelectItem(title)
+            setValue(title)
             setShowList(false)
         }
     }
+
     useOutsideClick(dropdownRef, onClose, showList )
     return (
         <div ref={dropdownRef} className={cls.DropDownBtn}>
@@ -87,7 +89,7 @@ export const MySelect = memo(forwardRef<HTMLInputElement, InputProps>((props: In
                     <div className={cls.text}>Выберете вариант из списка, нажав на него</div>
                     {
                         option.map(el => (
-                            el.title !== currentItem ? <li key={el.value} className={cls.DropDownItem} onClick={()=>getCurrentItem(el.title)}>{el.title}</li>:
+                            el.title !== value ? <li key={el.value} className={cls.DropDownItem} onClick={()=>getCurrentItem(el.title)}>{el.title}</li>:
                                 <CurrentItem key={el.value}  getCurrentItem={getCurrentItem} {...el} />
                         ))
                     }
@@ -99,6 +101,8 @@ export const MySelect = memo(forwardRef<HTMLInputElement, InputProps>((props: In
                    ref={ref}
                    {...register(name)}
                    {...otherProps}
+                   value={value}
+                   // onChange={changeHandler}
             />
         </div>
 

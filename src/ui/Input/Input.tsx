@@ -1,10 +1,11 @@
-import React, {ChangeEvent, forwardRef, InputHTMLAttributes, memo, useState} from 'react';
+import React, {ChangeEvent, forwardRef, InputHTMLAttributes, memo} from 'react';
 import cls from './Input.module.scss'
 import {classNames} from "../../lib/classNames/classNames";
 import {FieldErrors, UseFormRegister} from "react-hook-form";
 import {IFormValues} from "../../components/formWrapper/FormWrapper";
 import {text} from "stream/consumers";
 import {RenderIcon} from "../RenderIcon/RenderIcon";
+import {useLocalStorageState} from "../../customHooks/useLocalStorage";
 
 
 
@@ -23,7 +24,6 @@ interface InputProps extends HTMLInputProps {
 
 
 export const Input =  memo(forwardRef<HTMLInputElement, InputProps>((props: InputProps, ref) => {
-    const [value, setValue] = useState('')
     const {
         className,
         type = 'text',
@@ -36,6 +36,8 @@ export const Input =  memo(forwardRef<HTMLInputElement, InputProps>((props: Inpu
         status,
         ...otherProps
     } = props
+    const initValue = type === 'text' ? '': ''
+    const [value, setValue] = useLocalStorageState(`${name}`, initValue)
     const allowOnlyRussianLetters=(value: string)=>{
        setValue(value.replace(/^[a-zA-Z0-9]+$/, ''))
     }
@@ -43,7 +45,7 @@ export const Input =  memo(forwardRef<HTMLInputElement, InputProps>((props: Inpu
         if (type === 'text'){
             allowOnlyRussianLetters(e.currentTarget.value)
         } else {
-            setValue(e.currentTarget.value)
+            setValue(e.currentTarget.value )
         }
 
     }
@@ -64,7 +66,7 @@ export const Input =  memo(forwardRef<HTMLInputElement, InputProps>((props: Inpu
                    onChange={changeHandler}
             />
                 <RenderIcon status={status} field={'text'}/>
-                {errors?.[name] && <div style={{color: 'red', padding: '8px', marginTop:'5px', fontSize:'12px', fontWeight:'700', fontFamily: 'HelveticaNeueCyr,sans-serif,normal'}}>{textError}</div>}
+                {errors?.[name] && <div className={cls.textError}>{textError}</div>}
             </div>
         </div>
     );
