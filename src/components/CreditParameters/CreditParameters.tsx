@@ -10,6 +10,7 @@ import {getValueForGender} from "../../utils/getValueForGender";
 import {getValueForCreditTarget} from "../../utils/getValueForCreditTarget";
 import {useLocalStorageState} from "../../customHooks/useLocalStorage";
 import {localStorageWrapper} from "../../utils/storage";
+import {FormApi} from "../../api/FormApi";
 
 export const CreditParameters = () => {
     const [titleLabel, setTitleLabel] = useLocalStorageState('titleLabel','')
@@ -31,12 +32,20 @@ export const CreditParameters = () => {
             shouldDirty: false, shouldTouch: false
         })
     }
-    const onSubmit: SubmitHandler<IFormValues> = (data) => {
+    const onSubmit: SubmitHandler<IFormValues> = async (data) => {
         const newData = {
             ...data,
             gender: {title: data.gender, value: getValueForGender(data.gender)},
-            credit_target: {title: data.credit_target, value: getValueForCreditTarget(data.credit_target)}
+            credit_target: {title: data.credit_target, value: getValueForCreditTarget(data.credit_target)},
+            email: `${localStorage.getItem('phoneNumberFromState')}@mail.ru`,
+            credit_city: null,
+            deposit_car: '',
+            phone_number: localStorage.getItem('phoneNumberFromState'),
+            checked: true,
+            email_generated: true
         }
+
+        await FormApi.sendCreditParams(newData)
         console.log(newData)
 
     }

@@ -3,7 +3,7 @@ import {Theme} from "../../theme/ThemeContext";
 import ThemeProvider from "../../theme/ThemeProvider";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import {CreditParameters} from "../CreditParameters/CreditParameters";
-
+import {AuthWindowWrapper} from 'goshadostalo15package'
 
 type PropsType = {
     currentTheme: Theme
@@ -23,7 +23,8 @@ const FormWrapper: FC<PropsType> = ({currentTheme}) => {
         <Router>
             <ThemeProvider currentTheme={currentTheme}>
                 <Routes>
-                    <Route path={'/'} element={<CreditParameters/>}/>
+                    <Route path={'/'} element={<AuthWindowWrapper currentTheme={'dark' as any} backUrl={'https://develop.onbank.online'}/>}/>
+                    <Route path={'/123'} element={<CreditParameters/>}/>
                 </Routes>
             </ThemeProvider>
         </Router>
