@@ -1,6 +1,4 @@
 import React, {
-    ChangeEvent,
-    ChangeEventHandler,
     FC,
     forwardRef,
     InputHTMLAttributes,
@@ -16,7 +14,6 @@ import {Accept} from "../Accept/Accept";
 import {useOutsideClick} from "../../customHooks/useOutsideClick";
 import {useLocalStorageState} from "../../customHooks/useLocalStorage";
 import {useNavigate} from "react-router";
-import {localStorageWrapper} from "../../utils/storage";
 import {getValueForCreditTarget} from "../../utils/getValueForCreditTarget";
 
 
@@ -64,8 +61,6 @@ export const MySelect = memo(forwardRef<HTMLInputElement, InputProps>((props: In
         titleForLabel,
         ...otherProps
     } = props
-    // const setCreditTargetSelectItem = useCurrentItemStore(store => store.setCreditTargetSelectItem)
-    // const setGenderSelectItem = useCurrentItemStore(store => store.setGenderSelectItem)
     const [showList, setShowList] = useState(false)
     const [value, setValue] = useLocalStorageState(`${name}`, '')
     const currentName = name === 'credit_target'? value || 'Кредитная карта': name === 'gender' ? value || 'Мужской':''
@@ -80,19 +75,19 @@ export const MySelect = memo(forwardRef<HTMLInputElement, InputProps>((props: In
         setShowList(false)
     }
     const getCurrentItem = (title: string) =>{
+        debugger
         if (name === "credit_target") {
             setValue(title)
             titleForLabel(title)
-            // setCreditTargetSelectItem(title)
+            const variablePath = getValueForCreditTarget(title)
+            console.log('variablePath', variablePath)
+            navigate(`/credit/${variablePath}/credit_parameters_info`)
             setShowList(false)
         } else if (name === 'gender') {
-            // setGenderSelectItem(title)
             setValue(title)
             setShowList(false)
         }
-        const variablePath = getValueForCreditTarget(title)
-        console.log('variablePath', variablePath)
-        navigate(`/credit/${variablePath}/credit_parameters_info`)
+
     }
     const navigate = useNavigate();
 

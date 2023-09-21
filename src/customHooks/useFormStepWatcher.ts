@@ -7,14 +7,10 @@ const useFormStepWatcher = () => {
     const navigate = useNavigate();
     const {pathname} = useLocation();
 
-    // const step = Number(localStorage.getItem('currentStep'));
-    const step = Number(localStorage.getItem('currentStep'));
+    const step = Number(localStorage.getItem('step'));
     //const {creditProduct} = useZustandState(state => state.creditParams)
-    // @ts-ignore
+
     const creditProduct =getValueForCreditTarget(localStorageWrapper.get('credit_target'))  || 'credit_card'
-    // @ts-ignore
-    console.log(localStorageWrapper.get('credit_target'))
-    console.log('!step', step)
     useEffect(() => {
         if (!step && pathname === '/') return navigate(`/credit/${creditProduct}/credit_parameters_info`);
 
