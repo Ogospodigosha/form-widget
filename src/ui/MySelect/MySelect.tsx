@@ -35,6 +35,7 @@ type Eltype = {
     title: string
     getCurrentItem: (title: string) => void
 }
+
 const CurrentItem:FC<Eltype> = ({value, title, getCurrentItem }) => {
     return (
         <div className={cls.activeItem}>
@@ -75,12 +76,10 @@ export const MySelect = memo(forwardRef<HTMLInputElement, InputProps>((props: In
         setShowList(false)
     }
     const getCurrentItem = (title: string) =>{
-        debugger
         if (name === "credit_target") {
             setValue(title)
             titleForLabel(title)
             const variablePath = getValueForCreditTarget(title)
-            console.log('variablePath', variablePath)
             navigate(`/credit/${variablePath}/credit_parameters_info`)
             setShowList(false)
         } else if (name === 'gender') {

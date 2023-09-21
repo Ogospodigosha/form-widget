@@ -13,12 +13,11 @@
   border:2px solid #5a5a5a;
   background: #fff;
 }
-.DropDownBtn::before {
+.MySelect::before {
   content: '';
   position: absolute;
-  top: 55%;
+  top: 41%;
   right: 20px;
-  //transform: translateY(-50%);
   display: block;
   width: 8px;
   height: 8px;

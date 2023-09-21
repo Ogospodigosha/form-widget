@@ -1,9 +1,8 @@
 import React, {FC, useEffect} from 'react';
 import {Theme} from "../../theme/ThemeContext";
 import ThemeProvider from "../../theme/ThemeProvider";
-import { BrowserRouter , Routes, Route } from "react-router-dom";
-import {CreditParameters} from "../CreditParameters/CreditParameters";
-import {AuthWindowWrapper} from 'goshadostalo15package'
+import { BrowserRouter  } from "react-router-dom";
+
 import Router from "../../router/Router";
 import {FormApi} from "../../api/FormApi";
 import {useLocalStorageState} from "../../customHooks/useLocalStorage";
