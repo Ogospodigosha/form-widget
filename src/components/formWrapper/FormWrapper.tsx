@@ -1,9 +1,10 @@
 import React, {FC} from 'react';
 import {Theme} from "../../theme/ThemeContext";
 import ThemeProvider from "../../theme/ThemeProvider";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter , Routes, Route } from "react-router-dom";
 import {CreditParameters} from "../CreditParameters/CreditParameters";
 import {AuthWindowWrapper} from 'goshadostalo15package'
+import Router from "../../router/Router";
 
 type PropsType = {
     currentTheme: Theme
@@ -20,14 +21,15 @@ export interface IFormValues {
 
 const FormWrapper: FC<PropsType> = ({currentTheme}) => {
     return (
-        <Router>
+        <BrowserRouter>
             <ThemeProvider currentTheme={currentTheme}>
-                <Routes>
-                    <Route path={'/'} element={<AuthWindowWrapper currentTheme={'dark' as any} backUrl={'https://develop.onbank.online'}/>}/>
-                    <Route path={'/123'} element={<CreditParameters/>}/>
-                </Routes>
+                {/*<Routes>*/}
+                {/*    <Route path={'/'} element={<AuthWindowWrapper currentTheme={'dark' as any} backUrl={'https://develop.onbank.online'}/>}/>*/}
+                {/*    <Route path={'/123'} element={<CreditParameters/>}/>*/}
+                {/*</Routes>*/}
+                <Router/>
             </ThemeProvider>
-        </Router>
+        </BrowserRouter>
 
     );
 };
