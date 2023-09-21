@@ -21,15 +21,17 @@ export interface IFormValues {
 
 const FormWrapper: FC<PropsType> = ({currentTheme}) => {
     return (
+        // <ThemeProvider currentTheme={currentTheme}>
         <BrowserRouter>
-            <ThemeProvider currentTheme={currentTheme}>
+
                 {/*<Routes>*/}
                 {/*    <Route path={'/'} element={<AuthWindowWrapper currentTheme={'dark' as any} backUrl={'https://develop.onbank.online'}/>}/>*/}
                 {/*    <Route path={'/123'} element={<CreditParameters/>}/>*/}
                 {/*</Routes>*/}
                 <Router/>
-            </ThemeProvider>
+
         </BrowserRouter>
+        // </ThemeProvider>
 
     );
 };

@@ -1,4 +1,13 @@
-import React, {FC, forwardRef, InputHTMLAttributes, memo, useRef, useState} from 'react';
+import React, {
+    ChangeEvent,
+    ChangeEventHandler,
+    FC,
+    forwardRef,
+    InputHTMLAttributes,
+    memo,
+    useRef,
+    useState
+} from 'react';
 import cls from './MySelect.module.scss'
 import {FieldErrors, UseFormRegister} from "react-hook-form";
 import {IFormValues} from "../../components/formWrapper/FormWrapper";
@@ -6,6 +15,11 @@ import {classNames} from "../../lib/classNames/classNames";
 import {Accept} from "../Accept/Accept";
 import {useOutsideClick} from "../../customHooks/useOutsideClick";
 import {useLocalStorageState} from "../../customHooks/useLocalStorage";
+import {useNavigate} from "react-router";
+import {localStorageWrapper} from "../../utils/storage";
+import {getValueForCreditTarget} from "../../utils/getValueForCreditTarget";
+
+
 
 type HTMLInputProps =
     Omit<InputHTMLAttributes<HTMLInputElement>, 'value' | 'onChange'>
@@ -60,6 +74,7 @@ export const MySelect = memo(forwardRef<HTMLInputElement, InputProps>((props: In
     const clickHandler = (event: any ) => {
         event.preventDefault()
         setShowList(prev => !prev)
+
     }
     const onClose = ()=>{
         setShowList(false)
@@ -75,7 +90,11 @@ export const MySelect = memo(forwardRef<HTMLInputElement, InputProps>((props: In
             setValue(title)
             setShowList(false)
         }
+        const variablePath = getValueForCreditTarget(title)
+        console.log('variablePath', variablePath)
+        navigate(`/credit/${variablePath}/credit_parameters_info`)
     }
+    const navigate = useNavigate();
 
     useOutsideClick(dropdownRef, onClose, showList )
     return (
@@ -89,7 +108,7 @@ export const MySelect = memo(forwardRef<HTMLInputElement, InputProps>((props: In
                     <div className={cls.text}>Выберете вариант из списка, нажав на него</div>
                     {
                         option.map(el => (
-                            el.title !== value ? <li key={el.value} className={cls.DropDownItem} onClick={()=>getCurrentItem(el.title)}>{el.title}</li>:
+                            el.title !== value ? <li  key={el.value} className={cls.DropDownItem} onClick={()=>getCurrentItem(el.title)}>{el.title}</li>:
                                 <CurrentItem key={el.value}  getCurrentItem={getCurrentItem} {...el} />
                         ))
                     }

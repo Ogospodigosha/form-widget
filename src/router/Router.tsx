@@ -10,7 +10,7 @@ function Router() {
                 {
                     path: ":product", children: [
                         {path: "credit_parameters_info", element: <CreditParameters/>},
-                        {path: "work_info", element: <div>132</div>},
+                        {path: "work_info", element: <div>456</div>},
                         {path: "additional_info", element: <div>132</div>},
                         {path: "passport_info", element: <div>132</div>},
 

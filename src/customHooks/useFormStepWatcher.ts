@@ -1,13 +1,19 @@
 import {useLocation, useNavigate} from "react-router";
 import {useEffect} from "react";
+import {localStorageWrapper} from "../utils/storage";
+import {getValueForCreditTarget} from "../utils/getValueForCreditTarget";
 
 const useFormStepWatcher = () => {
     const navigate = useNavigate();
     const {pathname} = useLocation();
-    debugger
-    const step = undefined
+
+    // const step = Number(localStorage.getItem('currentStep'));
+    const step = Number(localStorage.getItem('currentStep'));
     //const {creditProduct} = useZustandState(state => state.creditParams)
-    const creditProduct = 'credit_card'
+    // @ts-ignore
+    const creditProduct =getValueForCreditTarget(localStorageWrapper.get('credit_target'))  || 'credit_card'
+    // @ts-ignore
+    console.log(localStorageWrapper.get('credit_target'))
     console.log('!step', step)
     useEffect(() => {
         if (!step && pathname === '/') return navigate(`/credit/${creditProduct}/credit_parameters_info`);
