@@ -1,0 +1,44 @@
+.Button {
+  cursor: pointer;
+
+}
+//.standard {
+//  background: var(--navbar-color);
+//  padding: 19px 40px;
+//  color: var(--accent-color);
+//  border: none;
+//  border-radius: 10px;
+//  @media (max-width: 999px) {
+//    padding: 13px 12px;
+//  }
+//
+//  @media (max-width: 768px) {
+//    padding: 10px 30px;
+//  }
+//
+//  @media (max-width: 499px) {
+//    padding: 6px 9px;
+//  }
+//}
+.standard {
+  background: #fff;
+  border: 2px solid #56c7f5;
+  color: rgba(40,40,40,.9);
+  border-radius: 5px;
+  font-weight: 400;
+  overflow: hidden;
+  padding: 16px 58px;
+  position: relative;
+  text-align: center;
+  transition: box-shadow .5s,border .5s!important;
+  font-family: HelveticaNeueCyr,sans-serif,normal;
+  &:hover {
+    background: #56c7f5;
+    color: #fff;
+  }
+  @media screen and (min-width: 1040px) {
+    & {
+      font-size: 22px;
+    }
+  }
+}

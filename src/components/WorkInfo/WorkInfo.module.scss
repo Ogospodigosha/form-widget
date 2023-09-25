@@ -1,0 +1,104 @@
+.Container {
+  align-items: flex-start;
+  -webkit-align-items: flex-start;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  -webkit-justify-content: center;
+  overflow: hidden;
+  background: #fff;
+  border-radius: 5px;
+  box-shadow: 0 2px 6px rgba(38,53,104,.25);
+  padding: 16px;
+  position: relative;
+  //width: 100%;
+  margin-bottom: 20px;
+  @media screen and (min-width: 768px) {
+    & {
+      padding: 24px;
+    }
+  }
+  @media screen and (max-width: 767px) {
+    & {
+      grid-template-columns: 100%;
+
+    }
+  }
+  @media screen and  (min-width: 768px) and (max-width: 1040px) {
+    & {
+      grid-template-columns: 1fr 1fr;
+
+    }
+  }
+}
+.header {
+  color: #1c1c1e;
+  font-family: HelveticaNeueCyr,sans-serif,normal;
+  font-size: 26px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 1;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  @media screen and (max-width: 1040px) and (min-width: 768px) {
+    &{
+      font-size: 24px;
+    }
+  }
+  @media screen and (max-width: 767px) {
+    &{
+      font-size: 17px;
+    }
+  }
+}
+.grid {
+  grid-column-gap: 30px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(1%,1fr));
+  justify-items: center;
+  width: 100%;
+  @media screen and (max-width: 767px) {
+    & {
+      grid-row-gap: 15px;
+      grid-template-columns: 1fr;
+    }
+  }
+}
+.button {
+  background: #56c7f5;
+  color: #fff;
+  border: 0;
+  border-radius: 5px;
+  cursor: pointer;
+  display: block;
+  font-size: 14px;
+  font-weight: 400;
+  overflow: hidden;
+  padding: 16px 58px;
+  position: relative;
+  text-align: center;
+  transition: box-shadow .5s,border .5s!important;
+  font-family: HelveticaNeueCyr,sans-serif,normal;
+  &:hover {
+        transform: scaleY(1.05);
+        box-shadow: 6px 6px 4px rgba(86, 199, 245, .5);
+        -webkit-box-shadow: 6px 6px 4px rgba(86, 199, 245, .5);
+      }
+  @media screen and (min-width: 1040px) {
+        & {
+          font-size: 22px;
+        }
+      }
+  @media screen and (min-width: 768px) {
+        & {
+          font-size: 18px;
+        }
+      }
+  @media screen and (max-width: 767px) and (min-width: 300px) {
+        & {
+          width: 100%;
+          padding: 15px 0;
+        }
+      }
+}

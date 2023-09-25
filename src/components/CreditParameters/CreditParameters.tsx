@@ -11,9 +11,11 @@ import {getValueForCreditTarget} from "../../utils/getValueForCreditTarget";
 import {useLocalStorageState} from "../../customHooks/useLocalStorage";
 import {localStorageWrapper} from "../../utils/storage";
 import {FormApi} from "../../api/FormApi";
+import useFormStepWatcher from "../../customHooks/useFormStepWatcher";
 
 export const CreditParameters = () => {
     const [titleLabel, setTitleLabel] = useLocalStorageState('titleLabel','')
+    const [step, setStep] = useLocalStorageState('step', 0)
     const {handleSubmit, register, formState: {errors, touchedFields}, setValue} = useForm<IFormValues>({
         mode: "onBlur",
         // defaultValues: { credit_target: ''},
@@ -32,6 +34,7 @@ export const CreditParameters = () => {
             shouldDirty: false, shouldTouch: false
         })
     }
+
     const onSubmit: SubmitHandler<IFormValues> = async (data) => {
         const newData = {
             ...data,
@@ -45,11 +48,12 @@ export const CreditParameters = () => {
             email_generated: true
         }
 
-        await FormApi.sendCreditParams(newData)
-        // await FormApi.getApplication()
-        console.log(newData)
-
+        await FormApi.sendCreditParams(newData).then(res => {
+            // localStorage.setItem('step', '2')
+            setStep(2)
+        })
     }
+    useFormStepWatcher()
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
             <div style={{maxWidth: '1140px', margin: '0 auto'}}>
