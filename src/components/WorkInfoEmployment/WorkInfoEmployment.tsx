@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {Container} from "../../ui/Container/Container";
 import {Button, ThemeButton} from "../../ui/Button/Button";
 import {useNavigate} from "react-router";
@@ -10,15 +10,12 @@ import {DadataInput} from "../../ui/DadataInput/DadataInput";
 
 
 export type IFormValuesWork = {
-
     value: string
-
 }
 
 const WorkInfoEmployment = () => {
-    const {handleSubmit, register, formState: {errors, touchedFields}, setValue, setError} = useForm<IFormValuesWork>({
+    const {handleSubmit, register, formState: {errors, touchedFields}, setError,setValue} = useForm<IFormValuesWork>({
         mode: "onBlur",
-        // defaultValues: { credit_target: ''},
         reValidateMode: "onBlur"
     })
     const navigate = useNavigate()
@@ -30,9 +27,14 @@ const WorkInfoEmployment = () => {
     const onSubmit: SubmitHandler<IFormValuesWork> = async (data) => {
         console.log(data)
     }
-    const [address, setAddress] = useState('')
     const hasCity = () =>{
         return  !!localStorage.getItem('click')
+    }
+    const clickHandler = () =>{
+        setValue('value', localStorageWrapper.get('value') || '', {
+            shouldValidate: false,
+            shouldDirty: false, shouldTouch: false
+        })
     }
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -46,7 +48,6 @@ const WorkInfoEmployment = () => {
                                   label={'Введите адрес в поле ниже и\n' +
                                       'выберите подходящий из списка'}
                                   register={register}
-                                  // setAddress={setAddress}
                                   setError={setError}
                                   errors={errors}
                                   type={'text'}
@@ -57,7 +58,7 @@ const WorkInfoEmployment = () => {
                 </Container>
                 <div style={{padding: '0 24px'}}>
                     <Button theme={ThemeButton.STANDARD} onClick={goBack}>Назад</Button>
-                    <button type={'submit'}>Продолжить</button>
+                    <button type={'submit'} onClick={clickHandler}>Продолжить</button>
                 </div>
             </div>
         </form>

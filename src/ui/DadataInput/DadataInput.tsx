@@ -10,6 +10,7 @@ import {getAddressSuggestions} from "../../api/DadataApi";
 import {Dadata} from "../../api/FormApiTypes";
 import DadataAddrData = Dadata.DadataAddrData;
 import {useOutsideClick} from "../../customHooks/useOutsideClick";
+import {log} from "util";
 
 
 type HTMLInputProps =
@@ -24,7 +25,6 @@ interface InputProps extends HTMLInputProps {
     textError: string
     status: boolean
     setError: UseFormSetError<IFormValuesWork>
-    // setAddress: (address: string)=>void
 }
 
 
@@ -40,7 +40,6 @@ export const DadataInput = memo(forwardRef<HTMLInputElement, InputProps>((props:
         textError,
         status,
         setError,
-        // setAddress,
         ...otherProps
     } = props
     const initValue = type === 'text' ? '' : ''
@@ -49,7 +48,7 @@ export const DadataInput = memo(forwardRef<HTMLInputElement, InputProps>((props:
     const [searchAddress, setSearchAddress] = useState<DadataAddrData[]>()
     const dropdownRef = useRef(null)
     const [showList, setShowList] = useState(false)
-    // const [click, setClick] = useLocalStorageState(`${name}`, '')
+    const [click, setClick] = useLocalStorageState(`address`, '')
     const changeHandler = (e: ChangeEvent<HTMLInputElement>) => {
         const request: Dadata.DadataAddrRequest = {
             query: e.currentTarget.value,
@@ -69,9 +68,10 @@ export const DadataInput = memo(forwardRef<HTMLInputElement, InputProps>((props:
 let a = localStorage.getItem('click')
     useOutsideClick(dropdownRef, onClose, showList)
     const clickItem =(address: string) =>{
-
+        setValue(address)
+        console.log('address', address)
         localStorage.setItem('click', address)
-
+        setShowList(false)
     }
     return (
         <div ref={dropdownRef} className={classNames(cls.InputWrapper, {}, [className])}>

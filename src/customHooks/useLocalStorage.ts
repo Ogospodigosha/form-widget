@@ -2,6 +2,7 @@ import {SetStateAction, useCallback, useState} from "react";
 import {localStorageWrapper} from "../utils/storage";
 
 export const useLocalStorageState = <T>(key: string, initialValue: T | (()=>T)) => {
+
     const [value, setValue] = useState(()=>{
         const savedValue = localStorageWrapper.get<T>(key)
         if (typeof savedValue !== 'undefined') {
