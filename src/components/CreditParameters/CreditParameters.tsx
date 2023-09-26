@@ -49,7 +49,6 @@ export const CreditParameters = () => {
         }
 
         await FormApi.sendCreditParams(newData).then(res => {
-            // localStorage.setItem('step', '2')
             setStep(2)
         })
     }

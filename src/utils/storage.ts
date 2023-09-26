@@ -5,7 +5,7 @@ class StorageWrapper {
         try {
             this.storage = type === 'local' ? window.localStorage : window.sessionStorage
         } catch (error) {
-            console.error(error)
+            // console.error(error)
         }
     }
 
