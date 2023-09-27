@@ -7,17 +7,20 @@ import {localStorageWrapper} from "../../utils/storage";
 import cls from './WorkInfoEmployment.module.scss'
 import {SubmitHandler, useForm} from "react-hook-form";
 import {DadataInput} from "../../ui/DadataInput/DadataInput";
+import useRegionStore from "../../store/regionStore";
 
 
 export type IFormValuesWork = {
-    value: string
+    region: string
+    hasPhone: string
 }
 
 const WorkInfoEmployment = () => {
-    const {handleSubmit, register, formState: {errors, touchedFields}, setError,setValue} = useForm<IFormValuesWork>({
+    const {handleSubmit, register, formState: {errors, touchedFields}, setError,setValue, trigger, watch} = useForm<IFormValuesWork>({
         mode: "onBlur",
         reValidateMode: "onBlur"
     })
+    const { region} = useRegionStore()
     const navigate = useNavigate()
     const creditProduct = getValueForCreditTarget(localStorageWrapper.get('credit_target')) || 'credit_card'
     const goBack = () => {
@@ -25,17 +28,23 @@ const WorkInfoEmployment = () => {
         navigate(`/credit/${creditProduct}/work_info/work`)
     }
     const onSubmit: SubmitHandler<IFormValuesWork> = async (data) => {
-        console.log(data)
+        // console.log(data)
+        const newData = {
+            ...data,
+            region: {...region}
+        }
+        console.log(newData)
     }
-    const hasCity = () =>{
-        return  !!localStorage.getItem('click')
-    }
+
     const clickHandler = () =>{
-        setValue('value', localStorageWrapper.get('value') || '', {
+        setValue('region', localStorageWrapper.get('region') || '', {
             shouldValidate: false,
             shouldDirty: false, shouldTouch: false
         })
     }
+    // const value = watch('value')
+    // console.log(value)
+    console.log('!errors.value', errors.region)
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
             <div style={{maxWidth: '1140px', margin: '0 auto'}}>
@@ -43,17 +52,21 @@ const WorkInfoEmployment = () => {
                     <div className={cls.header}>
                         <div>Рабочий адрес</div>
                     </div>
-                    <DadataInput  {...register("value", {required: true, validate: hasCity})}
+                    <DadataInput  {...register("region")}
                                   placeholder={'Например: Москва Ленина д 2 кв 1 '}
                                   label={'Введите адрес в поле ниже и\n' +
                                       'выберите подходящий из списка'}
                                   register={register}
                                   setError={setError}
                                   errors={errors}
+                                  trigger={trigger}
                                   type={'text'}
                                   textError={'Укажите город и выберите его из выпадающего списка'}
-                                  status={errors.value === undefined && touchedFields.value ? true : undefined}
+                                  status={errors.region === undefined && touchedFields.region ? true : undefined}
                     />
+                    {
+                         !!localStorage.getItem('click') && !errors.region &&  <input {...register('hasPhone')}/>
+                    }
 
                 </Container>
                 <div style={{padding: '0 24px'}}>

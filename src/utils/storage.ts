@@ -20,7 +20,7 @@ class StorageWrapper {
            return JSON.parse(value) as T
 
         } catch (error) {
-            console.error(error)
+            // console.error(error)
         }
     }
 
@@ -32,7 +32,7 @@ class StorageWrapper {
             this.storage.setItem(key, stringValue)
 
         } catch (error) {
-            console.error(error)
+            // console.error(error)
         }
     }
 
