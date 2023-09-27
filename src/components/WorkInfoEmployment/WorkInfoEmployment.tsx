@@ -20,7 +20,6 @@ const WorkInfoEmployment = () => {
         mode: "onBlur",
         reValidateMode: "onBlur"
     })
-    const { region} = useRegionStore()
     const navigate = useNavigate()
     const creditProduct = getValueForCreditTarget(localStorageWrapper.get('credit_target')) || 'credit_card'
     const goBack = () => {
@@ -28,10 +27,10 @@ const WorkInfoEmployment = () => {
         navigate(`/credit/${creditProduct}/work_info/work`)
     }
     const onSubmit: SubmitHandler<IFormValuesWork> = async (data) => {
-        // console.log(data)
         const newData = {
-            ...data,
-            region: {...region}
+            work_address: {
+                region: localStorageWrapper.get('regionData')
+            }
         }
         console.log(newData)
     }

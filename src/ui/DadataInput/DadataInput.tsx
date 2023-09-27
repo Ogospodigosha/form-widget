@@ -33,6 +33,7 @@ interface InputProps extends HTMLInputProps {
 export const DadataInput = memo(forwardRef<HTMLInputElement, InputProps>((props: InputProps, ref) => {
     const {setAddress, el} = useCurrentItemStore()
     const {setRegion, region} = useRegionStore()
+    const [regionData, setRegionData] = useLocalStorageState('regionData', {})
     const {
         className,
         type = 'text',
@@ -95,6 +96,7 @@ export const DadataInput = memo(forwardRef<HTMLInputElement, InputProps>((props:
             }
             setRegion(dataForRegionInput)
             console.log(region)
+            setRegionData(dataForRegionInput)
         }
 
 
