@@ -7,16 +7,24 @@ import {localStorageWrapper} from "../../utils/storage";
 import cls from './WorkInfoEmployment.module.scss'
 import {SubmitHandler, useForm} from "react-hook-form";
 import {DadataInput} from "../../ui/DadataInput/DadataInput";
-import useRegionStore from "../../store/regionStore";
+
 
 
 export type IFormValuesWork = {
     region: string
-    hasPhone: string
+    city: string
 }
 
 const WorkInfoEmployment = () => {
-    const {handleSubmit, register, formState: {errors, touchedFields}, setError,setValue, trigger, watch} = useForm<IFormValuesWork>({
+    const {
+        handleSubmit,
+        register,
+        formState: {errors, touchedFields},
+        setError,
+        setValue,
+        trigger,
+        watch
+    } = useForm<IFormValuesWork>({
         mode: "onBlur",
         reValidateMode: "onBlur"
     })
@@ -29,13 +37,14 @@ const WorkInfoEmployment = () => {
     const onSubmit: SubmitHandler<IFormValuesWork> = async (data) => {
         const newData = {
             work_address: {
-                region: localStorageWrapper.get('regionData')
+                region: localStorageWrapper.get('regionData'),
+                city: localStorageWrapper.get('cityData')
             }
         }
         console.log(newData)
     }
 
-    const clickHandler = () =>{
+    const clickHandler = () => {
         setValue('region', localStorageWrapper.get('region') || '', {
             shouldValidate: false,
             shouldDirty: false, shouldTouch: false
@@ -53,6 +62,7 @@ const WorkInfoEmployment = () => {
                     </div>
                     <DadataInput  {...register("region")}
                                   placeholder={'Например: Москва Ленина д 2 кв 1 '}
+                                  name={'region'}
                                   label={'Введите адрес в поле ниже и\n' +
                                       'выберите подходящий из списка'}
                                   register={register}
@@ -64,7 +74,19 @@ const WorkInfoEmployment = () => {
                                   status={errors.region === undefined && touchedFields.region ? true : undefined}
                     />
                     {
-                         !!localStorage.getItem('click') && !errors.region &&  <input {...register('hasPhone')}/>
+                        !!localStorage.getItem('click') && !errors.region &&
+                        <DadataInput  {...register("city")}
+                                      placeholder={'Например: Москва'}
+                                      label={'Выберите город или населен. пункт'}
+                                      name={'city'}
+                                      register={register}
+                                      setError={setError}
+                                      errors={errors}
+                                      trigger={trigger}
+                                      type={'text'}
+                                      textError={'Укажите город и выберите его из выпадающего списка'}
+                                      status={errors.city === undefined && touchedFields.city ? true : undefined}
+                        />
                     }
 
                 </Container>

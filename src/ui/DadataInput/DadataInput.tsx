@@ -34,6 +34,7 @@ export const DadataInput = memo(forwardRef<HTMLInputElement, InputProps>((props:
     const {setAddress, el} = useCurrentItemStore()
     const {setRegion, region} = useRegionStore()
     const [regionData, setRegionData] = useLocalStorageState('regionData', {})
+    const [cityData, setCityData] = useLocalStorageState('cityData', {})
     const {
         className,
         type = 'text',
@@ -75,6 +76,7 @@ export const DadataInput = memo(forwardRef<HTMLInputElement, InputProps>((props:
 
     const clickItem =async (address: string, el:DadataAddrData, name: string) =>{
         let dataForRegionInput;
+        let dataForCity;
         console.log('name', name)
         localStorage.setItem('click', address)
         setValue(address)
@@ -97,9 +99,40 @@ export const DadataInput = memo(forwardRef<HTMLInputElement, InputProps>((props:
             setRegion(dataForRegionInput)
             console.log(region)
             setRegionData(dataForRegionInput)
+        } else if (name === 'city') {
+            dataForCity = {
+                city: el.data.city,
+                city_district: el.data.city_district,
+                city_district_fias_id: el.data.city_district_fias_id,
+                city_district_kladr_id: el.data.city_district_kladr_id,
+                city_district_type: el.data.city_district_type,
+                city_fias_id: el.data.city_fias_id,
+                city_kladr_id: el.data.city_kladr_id,
+                city_type: el.data.city_type,
+                city_with_type: el.data.city_with_type,
+                fias_code: el.data.fias_code,
+                fias_level: el.data.fias_level,
+                okato: el.data.okato,
+                postal_code: el.data.postal_code,
+                value: el.value
+            }
+            setCityData(dataForCity)
         }
 
 
+    }
+
+
+    const getCurrentItem = (el: DadataAddrData) => {
+        let region = `${el.data.region} ${el.data.region_type_full}`
+        let city = el.data.city_type_full ?  `${el.data.city_type_full} ${el.data.city}`: ''
+        let street = el.data.street_type_full ? `${el.data.street_type_full} ${el.data.street}`: ''
+        let area = el.data.area  ? `${el.data.area_type_full} ${el.data.area}`: ''
+        let settlement = el.data.settlement  ? `${el.data.settlement_type_full} ${el.data.settlement}`: ''
+        let cityArea = el.data.city_area ? `${el.data.city_area}`: ''
+        let arr = [region, city, cityArea, street, area, settlement]
+        let result =  arr.filter(el => el!== '').join(', ')
+       return result
     }
     const hasCity = () =>{
         return  !!localStorage.getItem('click')
@@ -126,12 +159,11 @@ export const DadataInput = memo(forwardRef<HTMLInputElement, InputProps>((props:
                 {!value && inputFocus &&
                     <div className={cls.hint} style={{textAlign: 'center'}}>Укажите "Введите адрес в поле ниже и
                         выберите подходящий из списка" и выберите вариант из появившегося списка</div>}
-                <button onClick={()=>console.log(region)}>region</button>
                 {value && showList && <ul className={cls.DropDownList}>
                     {/*{ searchAddress && <div className={cls.text}>Выберите вариант из списка, нажав на него или продолжите ввод.</div>}*/}
                     {
                         searchAddress && searchAddress.map(el => (
-                            <li onClick={()=>clickItem(el.value, el, name)} key={el.value} className={cls.DropDownItem}>{el.value}</li>
+                            <li onClick={()=>clickItem(el.value, el, name)} key={el.value} className={cls.DropDownItem}>{getCurrentItem(el)}</li>
                         ))
                     }
                 </ul>}
@@ -140,5 +172,6 @@ export const DadataInput = memo(forwardRef<HTMLInputElement, InputProps>((props:
             </div>
         </div>
     );
+    //`${el.data.region} ${el.data.region_type_full}, ${el.data.city_type_full} ${el.data.city} ${el.data.metro ? `, метро ${el.data.metro[0].name}`:''}`
 }))
 
