@@ -90,7 +90,6 @@ export const DadataInput = memo(forwardRef<HTMLInputElement, InputProps>((props:
         localStorage.setItem('click', address[0])
         setShowList(false)
         await  trigger('region')
-        if (name === 'region') {
              dataForRegionInput = {
                 fias_code: el.data.fias_code,
                 fias_level: el.data.fias_level,
@@ -102,9 +101,6 @@ export const DadataInput = memo(forwardRef<HTMLInputElement, InputProps>((props:
                 region_type: el.data.region_type,
                 region_with_type: el.data.region_with_type, value: el.value
             }
-            setRegionData(dataForRegionInput)
-
-        } else if (name === 'city') {
             dataForCity = {
                 city: el.data.city,
                 city_district: el.data.city_district,
@@ -121,11 +117,12 @@ export const DadataInput = memo(forwardRef<HTMLInputElement, InputProps>((props:
                 postal_code: el.data.postal_code,
                 value: el.value
             }
+            setRegionData(dataForRegionInput)
             setCityData(dataForCity)
         }
 
 
-    }
+
 
 
     const getCurrentItem = (el: DadataAddrData) => {
