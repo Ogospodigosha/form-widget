@@ -1,7 +1,7 @@
 import React, {ChangeEvent, forwardRef, InputHTMLAttributes, memo, useEffect, useRef, useState} from 'react';
 import cls from './DadataInput.module.scss'
 import {classNames} from "../../lib/classNames/classNames";
-import {FieldErrors, UseFormRegister, UseFormSetError, UseFormTrigger} from "react-hook-form";
+import {FieldErrors, UseFormRegister, UseFormReset, UseFormSetError, UseFormSetValue, UseFormTrigger} from "react-hook-form";
 import {text} from "stream/consumers";
 import {RenderIcon} from "../RenderIcon/RenderIcon";
 import {IFormValuesWork} from "../../components/WorkInfoEmployment/WorkInfoEmployment";
@@ -12,6 +12,7 @@ import DadataAddrData = Dadata.DadataAddrData;
 import {useOutsideClick} from "../../customHooks/useOutsideClick";
 import useCurrentItemStore from "../../store/addressStore";
 import useRegionStore from "../../store/regionStore";
+import {localStorageWrapper} from "../../utils/storage";
 
 
 type HTMLInputProps =
@@ -27,14 +28,14 @@ interface InputProps extends HTMLInputProps {
     status: boolean
     setError: UseFormSetError<IFormValuesWork>
     trigger: UseFormTrigger<IFormValuesWork>
+    setValue?: UseFormSetValue<IFormValuesWork>
 }
 
 
 export const DadataInput = memo(forwardRef<HTMLInputElement, InputProps>((props: InputProps, ref) => {
-    const {setAddress, el} = useCurrentItemStore()
-    const {setRegion, region} = useRegionStore()
     const [regionData, setRegionData] = useLocalStorageState('regionData', {})
     const [cityData, setCityData] = useLocalStorageState('cityData', {})
+    const [resultAddress, setResultAddress] = useLocalStorageState('resultAddress', [])
     const {
         className,
         type = 'text',
@@ -47,10 +48,11 @@ export const DadataInput = memo(forwardRef<HTMLInputElement, InputProps>((props:
         status,
         setError,
         trigger,
+       setValue,
         ...otherProps
     } = props
     const initValue = type === 'text' ? '' : ''
-    const [value, setValue] = useLocalStorageState(`${name}`, initValue)
+    const [value, setValueLs] = useLocalStorageState(`${name}`, initValue)
     const [inputFocus, setInputFocus] = useState(false)
     const [searchAddress, setSearchAddress] = useState<DadataAddrData[]>()
     const dropdownRef = useRef(null)
@@ -65,25 +67,29 @@ export const DadataInput = memo(forwardRef<HTMLInputElement, InputProps>((props:
             count: 5
         }
         const response = getAddressSuggestions(request).then(res => setSearchAddress(res))
+
         console.log(searchAddress)
-        setValue(e.currentTarget.value)
+        setValueLs(e.currentTarget.value)
         setShowList(true)
     }
     const onClose = ()=>{
         setShowList(false)
     }
     useOutsideClick(dropdownRef, onClose, showList)
-
-    const clickItem =async (address: string, el:DadataAddrData, name: string) =>{
+    const clickItem =async (address: string[], el:DadataAddrData, name: string) =>{
+        console.log('address', address)
+        if (name === 'region') {
+            setValueLs(address[0])
+        }
+        if (name === 'city') {
+            setValueLs(address[1])
+        }
+        setResultAddress(address)
         let dataForRegionInput;
         let dataForCity;
-        console.log('name', name)
-        localStorage.setItem('click', address)
-        setValue(address)
-        setAddress(el)
+        localStorage.setItem('click', address[0])
         setShowList(false)
         await  trigger('region')
-        console.log(errors)
         if (name === 'region') {
              dataForRegionInput = {
                 fias_code: el.data.fias_code,
@@ -96,9 +102,8 @@ export const DadataInput = memo(forwardRef<HTMLInputElement, InputProps>((props:
                 region_type: el.data.region_type,
                 region_with_type: el.data.region_with_type, value: el.value
             }
-            setRegion(dataForRegionInput)
-            console.log(region)
             setRegionData(dataForRegionInput)
+
         } else if (name === 'city') {
             dataForCity = {
                 city: el.data.city,
@@ -131,11 +136,13 @@ export const DadataInput = memo(forwardRef<HTMLInputElement, InputProps>((props:
         let settlement = el.data.settlement  ? `${el.data.settlement_type_full} ${el.data.settlement}`: ''
         let cityArea = el.data.city_area ? `${el.data.city_area}`: ''
         let arr = [region, city, cityArea, street, area, settlement]
+        let resultArr =  arr.filter(el => el!== '')
         let result =  arr.filter(el => el!== '').join(', ')
-       return result
+       return resultArr
     }
+
     const hasCity = () =>{
-        return  !!localStorage.getItem('click')
+             return  !!localStorage.getItem('click')
     }
     return (
         <div ref={dropdownRef} className={classNames(cls.InputWrapper, {}, [className])}>
@@ -163,7 +170,7 @@ export const DadataInput = memo(forwardRef<HTMLInputElement, InputProps>((props:
                     {/*{ searchAddress && <div className={cls.text}>Выберите вариант из списка, нажав на него или продолжите ввод.</div>}*/}
                     {
                         searchAddress && searchAddress.map(el => (
-                            <li onClick={()=>clickItem(el.value, el, name)} key={el.value} className={cls.DropDownItem}>{getCurrentItem(el)}</li>
+                            <li onClick={()=>clickItem(getCurrentItem(el), el, name)} key={el.value} className={cls.DropDownItem}>{getCurrentItem(el).join(', ')}</li>
                         ))
                     }
                 </ul>}

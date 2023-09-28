@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {Container} from "../../ui/Container/Container";
 import {Button, ThemeButton} from "../../ui/Button/Button";
 import {useNavigate} from "react-router";
@@ -7,6 +7,7 @@ import {localStorageWrapper} from "../../utils/storage";
 import cls from './WorkInfoEmployment.module.scss'
 import {SubmitHandler, useForm} from "react-hook-form";
 import {DadataInput} from "../../ui/DadataInput/DadataInput";
+
 
 
 
@@ -23,11 +24,26 @@ const WorkInfoEmployment = () => {
         setError,
         setValue,
         trigger,
-        watch
     } = useForm<IFormValuesWork>({
         mode: "onBlur",
-        reValidateMode: "onBlur"
+        reValidateMode: "onBlur",
+        defaultValues: {
+            region: localStorage.getItem('resultAddress')? localStorageWrapper.get('resultAddress')[0] : '',
+            city:localStorage.getItem('resultAddress')? localStorageWrapper.get('resultAddress')[1] : '',
+        }
     })
+    useEffect(()=>{
+        if (localStorageWrapper.get('resultAddress') && !!localStorage.getItem('click')) {
+            setValue('region', localStorageWrapper.get('resultAddress')[0] || '', {
+                shouldValidate: false,
+                shouldDirty: false, shouldTouch: false
+            })
+            setValue('city', localStorageWrapper.get('resultAddress')[1] || '', {
+                shouldValidate: false,
+                shouldDirty: false, shouldTouch: false
+            })
+        }
+    },[localStorageWrapper.get('resultAddress')])
     const navigate = useNavigate()
     const creditProduct = getValueForCreditTarget(localStorageWrapper.get('credit_target')) || 'credit_card'
     const goBack = () => {
@@ -49,6 +65,10 @@ const WorkInfoEmployment = () => {
             shouldValidate: false,
             shouldDirty: false, shouldTouch: false
         })
+        // setValue('city', localStorageWrapper.get('city') || '', {
+        //     shouldValidate: false,
+        //     shouldDirty: false, shouldTouch: false
+        // } )
     }
     // const value = watch('value')
     // console.log(value)
@@ -70,6 +90,7 @@ const WorkInfoEmployment = () => {
                                   errors={errors}
                                   trigger={trigger}
                                   type={'text'}
+                                  setValue={setValue}
                                   textError={'Укажите город и выберите его из выпадающего списка'}
                                   status={errors.region === undefined && touchedFields.region ? true : undefined}
                     />
