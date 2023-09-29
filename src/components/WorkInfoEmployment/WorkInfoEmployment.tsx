@@ -35,24 +35,24 @@ const WorkInfoEmployment = () => {
             city:localStorage.getItem('resultAddress')? localStorageWrapper.get('resultAddress')[1] : '',
         }
     })
-    useEffect(()=>{
-         // предыдущее значение
-        if (localStorageWrapper.get('resultAddress') ) {
-
-            setValue('region', localStorageWrapper.get('resultAddress')[0] || '', {
-                shouldValidate: false,
-                shouldDirty: false, shouldTouch: false
-            })
-
-            localStorageWrapper.set('region', localStorageWrapper.get('resultAddress')[0])
-
-            setValue('city', localStorageWrapper.get('resultAddress')[1] || '', {
-                shouldValidate: false,
-                shouldDirty: false, shouldTouch: false
-            })
-            localStorageWrapper.set('city', localStorageWrapper.get('resultAddress')[1])
-        }
-    },[localStorageWrapper.get('resultAddress')])
+    // useEffect(()=>{
+    //      // предыдущее значение
+    //     if (localStorageWrapper.get('resultAddress') ) {
+    //
+    //         setValue('region', localStorageWrapper.get('resultAddress')[0] || '', {
+    //             shouldValidate: false,
+    //             shouldDirty: false, shouldTouch: false
+    //         })
+    //
+    //         localStorageWrapper.set('region', localStorageWrapper.get('resultAddress')[0])
+    //
+    //         setValue('city', localStorageWrapper.get('resultAddress')[1] || '', {
+    //             shouldValidate: false,
+    //             shouldDirty: false, shouldTouch: false
+    //         })
+    //         localStorageWrapper.set('city', localStorageWrapper.get('resultAddress')[1])
+    //     }
+    // },[localStorageWrapper.get('resultAddress')])
     const navigate = useNavigate()
     const creditProduct = getValueForCreditTarget(localStorageWrapper.get('credit_target')) || 'credit_card'
     const goBack = () => {

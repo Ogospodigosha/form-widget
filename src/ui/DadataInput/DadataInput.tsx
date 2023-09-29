@@ -10,6 +10,7 @@ import {getAddressSuggestions} from "../../api/DadataApi";
 import {Dadata} from "../../api/FormApiTypes";
 import DadataAddrData = Dadata.DadataAddrData;
 import {useOutsideClick} from "../../customHooks/useOutsideClick";
+import {localStorageWrapper} from "../../utils/storage";
 
 
 type HTMLInputProps =
@@ -74,12 +75,18 @@ export const DadataInput = memo(forwardRef<HTMLInputElement, InputProps>((props:
         setShowList(false)
     }
     useOutsideClick(dropdownRef, onClose, showList)
+
     const clickItem = (address: string[], el:DadataAddrData, name: string) =>{
         console.log('address', address)
-        console.log('resultAddress', resultAddress)
-        setResultAddress(address)
+        // console.log('resultAddress', resultAddress)
+        // setResultAddress(address)
         if (name === 'region') {
-            setValueLs(resultAddress[0])
+            setValueLs(address[0])
+            localStorage.setItem('city', address[1])
+            setValue('city', address[1] || '', {
+                shouldValidate: false,
+                shouldDirty: false, shouldTouch: false
+            })
         }
         if (name === 'city') {
             setValueLs(address[1])
