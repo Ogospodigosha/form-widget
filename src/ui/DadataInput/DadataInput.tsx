@@ -18,7 +18,6 @@ import {getAddressSuggestions} from "../../api/DadataApi";
 import {Dadata} from "../../api/FormApiTypes";
 import DadataAddrData = Dadata.DadataAddrData;
 import {useOutsideClick} from "../../customHooks/useOutsideClick";
-import {localStorageWrapper} from "../../utils/storage";
 import useResultAddressStore from "../../store/resultAdddressStore";
 
 
@@ -86,9 +85,12 @@ export const DadataInput = memo(forwardRef<HTMLInputElement, InputProps>((props:
         }
         const response = getAddressSuggestions(request).then(res => setSearchAddress(res))
         setValueLs(e.currentTarget.value)
-        console.log('value', value)
         setShowList(true)
     }
+    useEffect(()=>{
+        console.log('addressInStore',addressInStore)
+        console.log('defaultValue', defaultValue)
+    }, [addressInStore])
     const onClose = ()=>{
         setShowList(false)
     }
@@ -97,12 +99,14 @@ export const DadataInput = memo(forwardRef<HTMLInputElement, InputProps>((props:
         setAddress(address)
         setResultAddress(address)
         // if (name === 'region') {
+        //     setValueLs(localStorageWrapper.get(name))
         //     localStorageWrapper.set('city', address[1])
         //     // setValueLs(prev => address[0])
+        //
         // }
         // if (name === 'city') {
         //     localStorageWrapper.set('region', address[0])
-        //     // setValueLs('')
+        //     setValueLs('')
         //
         // }
 
@@ -176,20 +180,27 @@ export const DadataInput = memo(forwardRef<HTMLInputElement, InputProps>((props:
                        placeholder={placeholder}
                        type={type}
 
-                       {...register(name ,  {required: true, validate:hasCity})}
-                    ref={ref}
+                       {...register(name ,  {required: true, validate:hasCity, onChange: changeHandler})}
+
                        {...otherProps}
                        onClick={e => {
-                           if (name === 'region'  && defaultValue) {
-                               setAddress([])
-                           }
-                           if (name === 'city' && defaultValue) {
-                               setAddress([])
-                           }
+                           // if (name === 'region'  && defaultValue) {
+                           //     setValueLs(localStorageWrapper.get('region'))
+                           //     setValueLs(localStorageWrapper.get(name))
+                           //     setAddress([])
+                           // }
+                           // if (name === 'city' && defaultValue ) {
+                           //     setValueLs(localStorageWrapper.get('city'))
+                           //     setValueLs(localStorageWrapper.get(name))
+                           //     setAddress([])
+                           // }
+                           // if (!defaultValue && localStorageWrapper.get('resultAddress')) {
+                           //     setAddress(localStorageWrapper.get('resultAddress'))
+                           // }
                            e.currentTarget.focus()
                        }}
-                       value={defaultValue? defaultValue: localStorageWrapper.get(name)}
-                       onChange={changeHandler}
+                       // value={defaultValue? defaultValue: value}
+                       // onChange={changeHandler}
                 />
                 {!value && inputFocus &&
                     <div className={cls.hint} style={{textAlign: 'center'}}>Укажите "Введите адрес в поле ниже и

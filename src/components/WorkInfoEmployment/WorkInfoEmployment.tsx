@@ -55,6 +55,7 @@ const WorkInfoEmployment = () => {
             localStorageWrapper.set('city', localStorageWrapper.get('resultAddress')[1])
         }
     },[localStorageWrapper.get('resultAddress')])
+
     const navigate = useNavigate()
     const creditProduct = getValueForCreditTarget(localStorageWrapper.get('credit_target')) || 'credit_card'
     const goBack = () => {
@@ -78,6 +79,7 @@ const WorkInfoEmployment = () => {
         })
 
     }
+
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
             <div style={{maxWidth: '1140px', margin: '0 auto'}}>
