@@ -22,7 +22,7 @@ export interface IFormValues {
 }
 
 const FormWrapper: FC<PropsType> = ({currentTheme}) => {
-    console.log('formWrapper render')
+    // console.log('formWrapper render')
     const setCurrentStep =   useCurrentItemStore(store => store.setCurrentStep)
     const [step, setStep] = useLocalStorageState('step', 0)
     useEffect(()=>{

@@ -1,4 +1,4 @@
-import React, {ChangeEvent, forwardRef, InputHTMLAttributes, memo, useEffect, useRef, useState} from 'react';
+import React, {ChangeEvent, forwardRef, InputHTMLAttributes, memo, useRef, useState} from 'react';
 import cls from './DadataInput.module.scss'
 import {classNames} from "../../lib/classNames/classNames";
 import {FieldErrors, UseFormRegister, UseFormReset, UseFormSetError, UseFormSetValue, UseFormTrigger} from "react-hook-form";
@@ -10,9 +10,6 @@ import {getAddressSuggestions} from "../../api/DadataApi";
 import {Dadata} from "../../api/FormApiTypes";
 import DadataAddrData = Dadata.DadataAddrData;
 import {useOutsideClick} from "../../customHooks/useOutsideClick";
-import useCurrentItemStore from "../../store/addressStore";
-import useRegionStore from "../../store/regionStore";
-import {localStorageWrapper} from "../../utils/storage";
 
 
 type HTMLInputProps =
@@ -29,6 +26,7 @@ interface InputProps extends HTMLInputProps {
     setError: UseFormSetError<IFormValuesWork>
     trigger: UseFormTrigger<IFormValuesWork>
     setValue?: UseFormSetValue<IFormValuesWork>
+    reset?: UseFormReset<IFormValuesWork>
 }
 
 
@@ -49,6 +47,7 @@ export const DadataInput = memo(forwardRef<HTMLInputElement, InputProps>((props:
         setError,
         trigger,
        setValue,
+        reset,
         ...otherProps
     } = props
     const initValue = type === 'text' ? '' : ''
@@ -67,29 +66,30 @@ export const DadataInput = memo(forwardRef<HTMLInputElement, InputProps>((props:
             count: 5
         }
         const response = getAddressSuggestions(request).then(res => setSearchAddress(res))
-
-        console.log(searchAddress)
         setValueLs(e.currentTarget.value)
+        console.log('value', value)
         setShowList(true)
     }
     const onClose = ()=>{
         setShowList(false)
     }
     useOutsideClick(dropdownRef, onClose, showList)
-    const clickItem =async (address: string[], el:DadataAddrData, name: string) =>{
+    const clickItem = (address: string[], el:DadataAddrData, name: string) =>{
         console.log('address', address)
+        console.log('resultAddress', resultAddress)
+        setResultAddress(address)
         if (name === 'region') {
-            setValueLs(address[0])
+            setValueLs(resultAddress[0])
         }
         if (name === 'city') {
             setValueLs(address[1])
         }
-        setResultAddress(address)
+
         let dataForRegionInput;
         let dataForCity;
         localStorage.setItem('click', address[0])
         setShowList(false)
-        await  trigger('region')
+          trigger('region')
              dataForRegionInput = {
                 fias_code: el.data.fias_code,
                 fias_level: el.data.fias_level,
@@ -126,6 +126,7 @@ export const DadataInput = memo(forwardRef<HTMLInputElement, InputProps>((props:
 
 
     const getCurrentItem = (el: DadataAddrData) => {
+
         let region = `${el.data.region} ${el.data.region_type_full}`
         let city = el.data.city_type_full ?  `${el.data.city_type_full} ${el.data.city}`: ''
         let street = el.data.street_type_full ? `${el.data.street_type_full} ${el.data.street}`: ''
@@ -155,6 +156,22 @@ export const DadataInput = memo(forwardRef<HTMLInputElement, InputProps>((props:
                        {...register(name , {required: true, validate:hasCity})}
                        {...otherProps}
                        onClick={e => {
+                           // if (name === 'region' && localStorageWrapper.get('resultAddress')) {
+                           //     // reset(formValues => ({
+                           //     //     ...formValues,
+                           //     //     region: localStorageWrapper.get('resultAddress')[0]
+                           //     // }))
+                           //     // reset(formValues => ({
+                           //     //     ...formValues,
+                           //     //     region: localStorage.getItem('resultAddress')? localStorageWrapper.get('resultAddress')[0] : '',
+                           //     // }))
+                           //     // setValue('region',  '', {
+                           //     //     shouldValidate: false,
+                           //     //     shouldDirty: false, shouldTouch: false
+                           //     // })
+                           // }
+
+                           //
                            e.currentTarget.focus()
                        }}
                        value={value}
@@ -176,6 +193,5 @@ export const DadataInput = memo(forwardRef<HTMLInputElement, InputProps>((props:
             </div>
         </div>
     );
-    //`${el.data.region} ${el.data.region_type_full}, ${el.data.city_type_full} ${el.data.city} ${el.data.metro ? `, метро ${el.data.metro[0].name}`:''}`
 }))
 

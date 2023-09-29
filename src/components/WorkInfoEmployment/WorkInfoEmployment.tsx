@@ -24,6 +24,9 @@ const WorkInfoEmployment = () => {
         setError,
         setValue,
         trigger,
+        getValues,
+        reset,
+        resetField
     } = useForm<IFormValuesWork>({
         mode: "onBlur",
         reValidateMode: "onBlur",
@@ -33,15 +36,21 @@ const WorkInfoEmployment = () => {
         }
     })
     useEffect(()=>{
-        if (localStorageWrapper.get('resultAddress') && !!localStorage.getItem('click')) {
+         // предыдущее значение
+        if (localStorageWrapper.get('resultAddress') ) {
+
             setValue('region', localStorageWrapper.get('resultAddress')[0] || '', {
                 shouldValidate: false,
                 shouldDirty: false, shouldTouch: false
             })
+
+            localStorageWrapper.set('region', localStorageWrapper.get('resultAddress')[0])
+
             setValue('city', localStorageWrapper.get('resultAddress')[1] || '', {
                 shouldValidate: false,
                 shouldDirty: false, shouldTouch: false
             })
+            localStorageWrapper.set('city', localStorageWrapper.get('resultAddress')[1])
         }
     },[localStorageWrapper.get('resultAddress')])
     const navigate = useNavigate()
@@ -65,14 +74,8 @@ const WorkInfoEmployment = () => {
             shouldValidate: false,
             shouldDirty: false, shouldTouch: false
         })
-        // setValue('city', localStorageWrapper.get('city') || '', {
-        //     shouldValidate: false,
-        //     shouldDirty: false, shouldTouch: false
-        // } )
+
     }
-    // const value = watch('value')
-    // console.log(value)
-    console.log('!errors.value', errors.region)
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
             <div style={{maxWidth: '1140px', margin: '0 auto'}}>
@@ -86,6 +89,7 @@ const WorkInfoEmployment = () => {
                                   label={'Введите адрес в поле ниже и\n' +
                                       'выберите подходящий из списка'}
                                   register={register}
+                                  reset={reset}
                                   setError={setError}
                                   errors={errors}
                                   trigger={trigger}

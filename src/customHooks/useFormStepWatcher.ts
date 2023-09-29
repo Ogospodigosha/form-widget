@@ -7,7 +7,6 @@ import useCurrentItemStore from "../store/currentStepStore";
 const useFormStepWatcher = () => {
     const step = Number(localStorage.getItem('step'));
     const currentStep =   useCurrentItemStore(store => store.step)
-    console.log('step', step)
     const navigate = useNavigate();
     const {pathname} = useLocation();
     // localStorage.setItem('step', '2')

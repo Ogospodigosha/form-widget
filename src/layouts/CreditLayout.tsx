@@ -3,7 +3,6 @@ import useFormStepWatcher from "../customHooks/useFormStepWatcher";
 
 const CreditLayout = () => {
     const outlet = useOutlet()
-    console.log('layout render')
 
     useFormStepWatcher();
 

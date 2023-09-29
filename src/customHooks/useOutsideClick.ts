@@ -5,7 +5,6 @@ import {IFormValuesWork} from "../components/WorkInfoEmployment/WorkInfoEmployme
 export const useOutsideClick = (elementRef: MutableRefObject<HTMLElement | null>, handler:()=> void, attached=true, isClicked?: boolean, setError?:UseFormSetError<IFormValuesWork>) =>{
     useEffect(()=>{
         if (!attached) return
-        console.log('effect')
         const handleClick =(e:Event)=>{
             if (!elementRef.current) return
             if (!elementRef.current.contains(e.target as HTMLDivElement)) {
