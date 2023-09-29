@@ -1,7 +1,15 @@
-import React, {ChangeEvent, forwardRef, InputHTMLAttributes, memo, useRef, useState} from 'react';
+import React, {ChangeEvent, forwardRef, InputHTMLAttributes, memo, useEffect, useRef, useState} from 'react';
 import cls from './DadataInput.module.scss'
 import {classNames} from "../../lib/classNames/classNames";
-import {FieldErrors, UseFormRegister, UseFormReset, UseFormSetError, UseFormSetValue, UseFormTrigger} from "react-hook-form";
+import {
+    FieldErrors,
+    UseFormGetValues,
+    UseFormRegister,
+    UseFormReset,
+    UseFormSetError,
+    UseFormSetValue,
+    UseFormTrigger
+} from "react-hook-form";
 import {text} from "stream/consumers";
 import {RenderIcon} from "../RenderIcon/RenderIcon";
 import {IFormValuesWork} from "../../components/WorkInfoEmployment/WorkInfoEmployment";
@@ -11,10 +19,11 @@ import {Dadata} from "../../api/FormApiTypes";
 import DadataAddrData = Dadata.DadataAddrData;
 import {useOutsideClick} from "../../customHooks/useOutsideClick";
 import {localStorageWrapper} from "../../utils/storage";
+import useResultAddressStore from "../../store/resultAdddressStore";
 
 
 type HTMLInputProps =
-    Omit<InputHTMLAttributes<HTMLInputElement>, 'value' | 'onChange'>
+    Omit<InputHTMLAttributes<HTMLInputElement>, 'value' | 'onChange'| 'onBlur'>
     & ReturnType<UseFormRegister<IFormValuesWork>>
 
 interface InputProps extends HTMLInputProps {
@@ -28,10 +37,16 @@ interface InputProps extends HTMLInputProps {
     trigger: UseFormTrigger<IFormValuesWork>
     setValue?: UseFormSetValue<IFormValuesWork>
     reset?: UseFormReset<IFormValuesWork>
+    defaultValue?: string
+    getValues?: UseFormGetValues<IFormValuesWork>
 }
 
 
 export const DadataInput = memo(forwardRef<HTMLInputElement, InputProps>((props: InputProps, ref) => {
+
+    const {setAddress, addressInStore} = useResultAddressStore()
+    const [regionValue, setRegionValue] = useLocalStorageState('regionValue', '')
+    const [cityValue, setCityValue] = useLocalStorageState('cityValue', '')
     const [regionData, setRegionData] = useLocalStorageState('regionData', {})
     const [cityData, setCityData] = useLocalStorageState('cityData', {})
     const [resultAddress, setResultAddress] = useLocalStorageState('resultAddress', [])
@@ -49,6 +64,8 @@ export const DadataInput = memo(forwardRef<HTMLInputElement, InputProps>((props:
         trigger,
        setValue,
         reset,
+        defaultValue,
+        getValues,
         ...otherProps
     } = props
     const initValue = type === 'text' ? '' : ''
@@ -58,6 +75,7 @@ export const DadataInput = memo(forwardRef<HTMLInputElement, InputProps>((props:
     const dropdownRef = useRef(null)
     const [showList, setShowList] = useState(false)
     const changeHandler = (e: ChangeEvent<HTMLInputElement>) => {
+        console.log(e.currentTarget.value)
         const request: Dadata.DadataAddrRequest = {
             query: e.currentTarget.value,
             from_bound: {value: ''},
@@ -75,22 +93,18 @@ export const DadataInput = memo(forwardRef<HTMLInputElement, InputProps>((props:
         setShowList(false)
     }
     useOutsideClick(dropdownRef, onClose, showList)
-
     const clickItem = (address: string[], el:DadataAddrData, name: string) =>{
-        console.log('address', address)
-        // console.log('resultAddress', resultAddress)
-        // setResultAddress(address)
-        if (name === 'region') {
-            setValueLs(address[0])
-            localStorage.setItem('city', address[1])
-            setValue('city', address[1] || '', {
-                shouldValidate: false,
-                shouldDirty: false, shouldTouch: false
-            })
-        }
-        if (name === 'city') {
-            setValueLs(address[1])
-        }
+        setAddress(address)
+        setResultAddress(address)
+        // if (name === 'region') {
+        //     localStorageWrapper.set('city', address[1])
+        //     // setValueLs(prev => address[0])
+        // }
+        // if (name === 'city') {
+        //     localStorageWrapper.set('region', address[0])
+        //     // setValueLs('')
+        //
+        // }
 
         let dataForRegionInput;
         let dataForCity;
@@ -149,6 +163,7 @@ export const DadataInput = memo(forwardRef<HTMLInputElement, InputProps>((props:
     const hasCity = () =>{
              return  !!localStorage.getItem('click')
     }
+
     return (
         <div ref={dropdownRef} className={classNames(cls.InputWrapper, {}, [className])}>
             <label className={classNames(cls.label, {}, [className])}>{label}
@@ -160,28 +175,20 @@ export const DadataInput = memo(forwardRef<HTMLInputElement, InputProps>((props:
                 <input className={errors?.[name] ? `${cls.Input} ${cls['input-error']}` : cls.Input}
                        placeholder={placeholder}
                        type={type}
-                       {...register(name , {required: true, validate:hasCity})}
+
+                       {...register(name ,  {required: true, validate:hasCity})}
+                    ref={ref}
                        {...otherProps}
                        onClick={e => {
-                           // if (name === 'region' && localStorageWrapper.get('resultAddress')) {
-                           //     // reset(formValues => ({
-                           //     //     ...formValues,
-                           //     //     region: localStorageWrapper.get('resultAddress')[0]
-                           //     // }))
-                           //     // reset(formValues => ({
-                           //     //     ...formValues,
-                           //     //     region: localStorage.getItem('resultAddress')? localStorageWrapper.get('resultAddress')[0] : '',
-                           //     // }))
-                           //     // setValue('region',  '', {
-                           //     //     shouldValidate: false,
-                           //     //     shouldDirty: false, shouldTouch: false
-                           //     // })
-                           // }
-
-                           //
+                           if (name === 'region'  && defaultValue) {
+                               setAddress([])
+                           }
+                           if (name === 'city' && defaultValue) {
+                               setAddress([])
+                           }
                            e.currentTarget.focus()
                        }}
-                       value={value}
+                       value={defaultValue? defaultValue: localStorageWrapper.get(name)}
                        onChange={changeHandler}
                 />
                 {!value && inputFocus &&

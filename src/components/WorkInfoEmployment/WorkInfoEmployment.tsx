@@ -7,6 +7,7 @@ import {localStorageWrapper} from "../../utils/storage";
 import cls from './WorkInfoEmployment.module.scss'
 import {SubmitHandler, useForm} from "react-hook-form";
 import {DadataInput} from "../../ui/DadataInput/DadataInput";
+import useResultAddressStore from "../../store/resultAdddressStore";
 
 
 
@@ -35,24 +36,25 @@ const WorkInfoEmployment = () => {
             city:localStorage.getItem('resultAddress')? localStorageWrapper.get('resultAddress')[1] : '',
         }
     })
-    // useEffect(()=>{
-    //      // предыдущее значение
-    //     if (localStorageWrapper.get('resultAddress') ) {
-    //
-    //         setValue('region', localStorageWrapper.get('resultAddress')[0] || '', {
-    //             shouldValidate: false,
-    //             shouldDirty: false, shouldTouch: false
-    //         })
-    //
-    //         localStorageWrapper.set('region', localStorageWrapper.get('resultAddress')[0])
-    //
-    //         setValue('city', localStorageWrapper.get('resultAddress')[1] || '', {
-    //             shouldValidate: false,
-    //             shouldDirty: false, shouldTouch: false
-    //         })
-    //         localStorageWrapper.set('city', localStorageWrapper.get('resultAddress')[1])
-    //     }
-    // },[localStorageWrapper.get('resultAddress')])
+    const {setAddress, addressInStore} = useResultAddressStore()
+    useEffect(()=>{
+         // предыдущее значение
+        if (localStorageWrapper.get('resultAddress') ) {
+
+            setValue('region', localStorageWrapper.get('resultAddress')[0] || '', {
+                shouldValidate: false,
+                shouldDirty: false, shouldTouch: false
+            })
+
+            localStorageWrapper.set('region', localStorageWrapper.get('resultAddress')[0])
+
+            setValue('city', localStorageWrapper.get('resultAddress')[1] || '', {
+                shouldValidate: false,
+                shouldDirty: false, shouldTouch: false
+            })
+            localStorageWrapper.set('city', localStorageWrapper.get('resultAddress')[1])
+        }
+    },[localStorageWrapper.get('resultAddress')])
     const navigate = useNavigate()
     const creditProduct = getValueForCreditTarget(localStorageWrapper.get('credit_target')) || 'credit_card'
     const goBack = () => {
@@ -84,6 +86,8 @@ const WorkInfoEmployment = () => {
                         <div>Рабочий адрес</div>
                     </div>
                     <DadataInput  {...register("region")}
+                                  defaultValue={addressInStore[0]}
+                                  getValues={getValues}
                                   placeholder={'Например: Москва Ленина д 2 кв 1 '}
                                   name={'region'}
                                   label={'Введите адрес в поле ниже и\n' +
@@ -102,9 +106,11 @@ const WorkInfoEmployment = () => {
                         !!localStorage.getItem('click') && !errors.region &&
                         <DadataInput  {...register("city")}
                                       placeholder={'Например: Москва'}
+                                      defaultValue={addressInStore[1]}
                                       label={'Выберите город или населен. пункт'}
                                       name={'city'}
                                       register={register}
+                                      setValue={setValue}
                                       setError={setError}
                                       errors={errors}
                                       trigger={trigger}
