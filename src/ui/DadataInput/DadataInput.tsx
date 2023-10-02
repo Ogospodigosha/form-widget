@@ -42,12 +42,10 @@ interface InputProps extends HTMLInputProps {
 
 
 export const DadataInput = memo(forwardRef<HTMLInputElement, InputProps>((props: InputProps, ref) => {
-
     const {setAddress, addressInStore} = useResultAddressStore()
-    const [regionValue, setRegionValue] = useLocalStorageState('regionValue', '')
-    const [cityValue, setCityValue] = useLocalStorageState('cityValue', '')
     const [regionData, setRegionData] = useLocalStorageState('regionData', {})
     const [cityData, setCityData] = useLocalStorageState('cityData', {})
+    const [streetData, setStreetData] = useLocalStorageState('streetData', {})
     const [resultAddress, setResultAddress] = useLocalStorageState('resultAddress', [])
     const {
         className,
@@ -112,6 +110,7 @@ export const DadataInput = memo(forwardRef<HTMLInputElement, InputProps>((props:
 
         let dataForRegionInput;
         let dataForCity;
+        let dataForStreet;
         localStorage.setItem('click', address[0])
         setShowList(false)
           trigger('region')
@@ -142,8 +141,28 @@ export const DadataInput = memo(forwardRef<HTMLInputElement, InputProps>((props:
                 postal_code: el.data.postal_code,
                 value: el.value
             }
+            dataForStreet = {
+                fias_code: el.data.fias_code,
+                fias_level: el.data.fias_level,
+                geo_lat: el.data.geo_lat,
+                geo_lon: el.data.geo_lon,
+                geoname_id: el.data.geoname_id,
+                // list_value: el.data.list_value
+                okato: el.data.okato,
+                oktmo: el.data.oktmo,
+                postal_code: el.data.postal_code,
+                qc_geo: el.data.qc_geo,
+                street: el.data.street,
+                street_fias_id: el.data.street_fias_id,
+                street_kladr_id: el.data.street_kladr_id,
+                street_type: el.data.street_type,
+                street_type_full: el.data.street_type_full,
+                street_with_type: el.data.street_with_type,
+                value: el.value
+            }
             setRegionData(dataForRegionInput)
             setCityData(dataForCity)
+            setStreetData(dataForStreet)
         }
 
 
@@ -180,27 +199,12 @@ export const DadataInput = memo(forwardRef<HTMLInputElement, InputProps>((props:
                        placeholder={placeholder}
                        type={type}
 
-                       {...register(name ,  {required: true, validate:hasCity, onChange: changeHandler})}
+                       {...register(name ,  {required: name !== 'street', validate:hasCity, onChange: changeHandler})}
 
                        {...otherProps}
                        onClick={e => {
-                           // if (name === 'region'  && defaultValue) {
-                           //     setValueLs(localStorageWrapper.get('region'))
-                           //     setValueLs(localStorageWrapper.get(name))
-                           //     setAddress([])
-                           // }
-                           // if (name === 'city' && defaultValue ) {
-                           //     setValueLs(localStorageWrapper.get('city'))
-                           //     setValueLs(localStorageWrapper.get(name))
-                           //     setAddress([])
-                           // }
-                           // if (!defaultValue && localStorageWrapper.get('resultAddress')) {
-                           //     setAddress(localStorageWrapper.get('resultAddress'))
-                           // }
                            e.currentTarget.focus()
                        }}
-                       // value={defaultValue? defaultValue: value}
-                       // onChange={changeHandler}
                 />
                 {!value && inputFocus &&
                     <div className={cls.hint} style={{textAlign: 'center'}}>Укажите "Введите адрес в поле ниже и

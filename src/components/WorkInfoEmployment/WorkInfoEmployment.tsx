@@ -10,11 +10,10 @@ import {DadataInput} from "../../ui/DadataInput/DadataInput";
 import useResultAddressStore from "../../store/resultAdddressStore";
 
 
-
-
 export type IFormValuesWork = {
     region: string
     city: string
+    street: string
 }
 
 const WorkInfoEmployment = () => {
@@ -32,29 +31,29 @@ const WorkInfoEmployment = () => {
         mode: "onBlur",
         reValidateMode: "onBlur",
         defaultValues: {
-            region: localStorage.getItem('resultAddress')? localStorageWrapper.get('resultAddress')[0] : '',
-            city:localStorage.getItem('resultAddress')? localStorageWrapper.get('resultAddress')[1] : '',
+            region: localStorage.getItem('resultAddress') ? localStorageWrapper.get('resultAddress')[0] : '',
+            city: localStorage.getItem('resultAddress') ? localStorageWrapper.get('resultAddress')[1] : '',
         }
     })
     const {setAddress, addressInStore} = useResultAddressStore()
-    useEffect(()=>{
-         // предыдущее значение
-        if (localStorageWrapper.get('resultAddress') ) {
+    useEffect(() => {
+        // предыдущее значение
+        if (localStorageWrapper.get('resultAddress')) {
 
             setValue('region', localStorageWrapper.get('resultAddress')[0] || '', {
                 shouldValidate: false,
                 shouldDirty: false, shouldTouch: false
             })
 
-            localStorageWrapper.set('region', localStorageWrapper.get('resultAddress')[0])
+            // localStorageWrapper.set('region', localStorageWrapper.get('resultAddress')[0])
 
             setValue('city', localStorageWrapper.get('resultAddress')[1] || '', {
                 shouldValidate: false,
                 shouldDirty: false, shouldTouch: false
             })
-            localStorageWrapper.set('city', localStorageWrapper.get('resultAddress')[1])
+            // localStorageWrapper.set('city', localStorageWrapper.get('resultAddress')[1])
         }
-    },[localStorageWrapper.get('resultAddress')])
+    }, [localStorageWrapper.get('resultAddress')])
 
     const navigate = useNavigate()
     const creditProduct = getValueForCreditTarget(localStorageWrapper.get('credit_target')) || 'credit_card'
@@ -106,20 +105,36 @@ const WorkInfoEmployment = () => {
                     />
                     {
                         !!localStorage.getItem('click') && !errors.region &&
-                        <DadataInput  {...register("city")}
-                                      placeholder={'Например: Москва'}
-                                      defaultValue={addressInStore[1]}
-                                      label={'Выберите город или населен. пункт'}
-                                      name={'city'}
-                                      register={register}
-                                      setValue={setValue}
-                                      setError={setError}
-                                      errors={errors}
-                                      trigger={trigger}
-                                      type={'text'}
-                                      textError={'Укажите город и выберите его из выпадающего списка'}
-                                      status={errors.city === undefined && touchedFields.city ? true : undefined}
-                        />
+                        <>
+                            <DadataInput  {...register("city")}
+                                          placeholder={'Например: Москва'}
+                                          defaultValue={addressInStore[1]}
+                                          label={'Выберите город или населен. пункт'}
+                                          name={'city'}
+                                          register={register}
+                                          setValue={setValue}
+                                          setError={setError}
+                                          errors={errors}
+                                          trigger={trigger}
+                                          type={'text'}
+                                          textError={'Укажите город и выберите его из выпадающего списка'}
+                                          status={errors.city === undefined && touchedFields.city ? true : undefined}
+                            />
+                            <DadataInput  {...register("street")}
+                                          placeholder={'Например: Ленина'}
+                                          defaultValue={addressInStore[2]}
+                                          label={'Выберите улицу (если есть)'}
+                                          name={'street'}
+                                          register={register}
+                                          setValue={setValue}
+                                          setError={setError}
+                                          errors={errors}
+                                          trigger={trigger}
+                                          type={'text'}
+                                          textError={'Укажите город и выберите его из выпадающего списка'}
+                                          status={errors.street === undefined && touchedFields.street ? true : undefined}
+                            />
+                        </>
                     }
 
                 </Container>
