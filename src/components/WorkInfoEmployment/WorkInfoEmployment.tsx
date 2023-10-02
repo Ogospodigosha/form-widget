@@ -14,6 +14,7 @@ export type IFormValuesWork = {
     region: string
     city: string
     street: string
+    house: string
 }
 
 const WorkInfoEmployment = () => {
@@ -33,6 +34,7 @@ const WorkInfoEmployment = () => {
         defaultValues: {
             region: localStorage.getItem('resultAddress') ? localStorageWrapper.get('resultAddress')[0] : '',
             city: localStorage.getItem('resultAddress') ? localStorageWrapper.get('resultAddress')[1] : '',
+            street: localStorage.getItem('resultAddress') ? localStorageWrapper.get('resultAddress')[1] : '',
         }
     })
     const {setAddress, addressInStore} = useResultAddressStore()
@@ -52,6 +54,16 @@ const WorkInfoEmployment = () => {
                 shouldDirty: false, shouldTouch: false
             })
             // localStorageWrapper.set('city', localStorageWrapper.get('resultAddress')[1])
+
+            setValue('street', localStorageWrapper.get('resultAddress')[2] || '', {
+                shouldValidate: false,
+                shouldDirty: false, shouldTouch: false
+            })
+
+            setValue('house', localStorageWrapper.get('resultAddress')[3] || '', {
+                shouldValidate: false,
+                shouldDirty: false, shouldTouch: false
+            })
         }
     }, [localStorageWrapper.get('resultAddress')])
 
@@ -65,7 +77,9 @@ const WorkInfoEmployment = () => {
         const newData = {
             work_address: {
                 region: localStorageWrapper.get('regionData'),
-                city: localStorageWrapper.get('cityData')
+                city: localStorageWrapper.get('cityData'),
+                street: localStorageWrapper.get('streetData'),
+                house: localStorageWrapper.get('houseData')
             }
         }
         console.log(newData)
@@ -120,19 +134,40 @@ const WorkInfoEmployment = () => {
                                           textError={'Укажите город и выберите его из выпадающего списка'}
                                           status={errors.city === undefined && touchedFields.city ? true : undefined}
                             />
-                            <DadataInput  {...register("street")}
-                                          placeholder={'Например: Ленина'}
-                                          defaultValue={addressInStore[2]}
-                                          label={'Выберите улицу (если есть)'}
-                                          name={'street'}
+
+                        </>
+                    }
+                    {
+                        !!localStorage.getItem('click') && !errors.city &&
+                        <>
+
+                        <DadataInput  {...register("street")}
+                                      placeholder={'Например: Ленина'}
+                                      defaultValue={addressInStore[2]}
+                                      label={'Выберите улицу (если есть)'}
+                                      name={'street'}
+                                      register={register}
+                                      setValue={setValue}
+                                      setError={setError}
+                                      errors={errors}
+                                      trigger={trigger}
+                                      type={'text'}
+                                      textError={'Укажите город и выберите его из выпадающего списка'}
+                                      status={errors.street === undefined && touchedFields.street ? true : undefined}
+                        />
+                            <DadataInput  {...register("house")}
+                                          placeholder={'Например: 13'}
+                                          defaultValue={addressInStore[3]}
+                                          label={'Выберите дом'}
+                                          name={'house'}
                                           register={register}
                                           setValue={setValue}
                                           setError={setError}
                                           errors={errors}
                                           trigger={trigger}
                                           type={'text'}
-                                          textError={'Укажите город и выберите его из выпадающего списка'}
-                                          status={errors.street === undefined && touchedFields.street ? true : undefined}
+                                          textError={'Укажите дом и выберите его из выпадающего списка'}
+                                          status={errors.house === undefined && touchedFields.house ? true : undefined}
                             />
                         </>
                     }

@@ -46,6 +46,7 @@ export const DadataInput = memo(forwardRef<HTMLInputElement, InputProps>((props:
     const [regionData, setRegionData] = useLocalStorageState('regionData', {})
     const [cityData, setCityData] = useLocalStorageState('cityData', {})
     const [streetData, setStreetData] = useLocalStorageState('streetData', {})
+    const [houseData, setHouseData] = useLocalStorageState('houseData', {})
     const [resultAddress, setResultAddress] = useLocalStorageState('resultAddress', [])
     const {
         className,
@@ -96,21 +97,10 @@ export const DadataInput = memo(forwardRef<HTMLInputElement, InputProps>((props:
     const clickItem = (address: string[], el:DadataAddrData, name: string) =>{
         setAddress(address)
         setResultAddress(address)
-        // if (name === 'region') {
-        //     setValueLs(localStorageWrapper.get(name))
-        //     localStorageWrapper.set('city', address[1])
-        //     // setValueLs(prev => address[0])
-        //
-        // }
-        // if (name === 'city') {
-        //     localStorageWrapper.set('region', address[0])
-        //     setValueLs('')
-        //
-        // }
-
         let dataForRegionInput;
         let dataForCity;
         let dataForStreet;
+        let dataForHouse;
         localStorage.setItem('click', address[0])
         setShowList(false)
           trigger('region')
@@ -160,9 +150,31 @@ export const DadataInput = memo(forwardRef<HTMLInputElement, InputProps>((props:
                 street_with_type: el.data.street_with_type,
                 value: el.value
             }
+            dataForHouse = {
+                block: el.data.block,
+                block_type: el.data.block_type,
+                block_type_full: el.data.block_type_full,
+                fias_code: el.data.fias_code,
+                fias_level: el.data.fias_level,
+                geo_lat: el.data.geo_lat,
+                geo_lon: el.data.geo_lon,
+                geoname_id: el.data.geoname_id,
+                house: el.data.house,
+                house_fias_id: el.data.house_fias_id,
+                house_kladr_id: el.data.house_kladr_id,
+                house_type: el.data.house_type,
+                house_type_full: el.data.house_type_full,
+                // list_value: el.data
+                okato: el.data.okato,
+                oktmo: el.data.oktmo,
+                postal_code: el.data.postal_code,
+                qc_geo: el.data.qc_geo,
+                value: el.value
+            }
             setRegionData(dataForRegionInput)
             setCityData(dataForCity)
             setStreetData(dataForStreet)
+            setHouseData(dataForHouse)
         }
 
 
@@ -170,15 +182,16 @@ export const DadataInput = memo(forwardRef<HTMLInputElement, InputProps>((props:
 
 
     const getCurrentItem = (el: DadataAddrData) => {
-
         let region = `${el.data.region} ${el.data.region_type_full}`
         let city = el.data.city_type_full ?  `${el.data.city_type_full} ${el.data.city}`: ''
         let street = el.data.street_type_full ? `${el.data.street_type_full} ${el.data.street}`: ''
         let area = el.data.area  ? `${el.data.area_type_full} ${el.data.area}`: ''
         let settlement = el.data.settlement  ? `${el.data.settlement_type_full} ${el.data.settlement}`: ''
         let cityArea = el.data.city_area ? `${el.data.city_area}`: ''
-        let arr = [region, city, cityArea, street, area, settlement]
+        let house = el.data.house ? `${el.data.house_type_full} ${el.data.house}`: ''
+        let arr = [region, city, cityArea, street, house, area, settlement]
         let resultArr =  arr.filter(el => el!== '')
+        console.log(resultArr)
         let result =  arr.filter(el => el!== '').join(', ')
        return resultArr
     }
